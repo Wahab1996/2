@@ -1,0 +1,1 @@
+// Loads JSON data into app
