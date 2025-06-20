@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+  <title>Fluid Calculator</title>
+  <style>
+    body {
+      background-color: #111;
+      color: #fff;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 0;
+      text-align: center;
+    }
+    header {
+      background-color: #000;
+      padding: 20px;
+      border-bottom: 1px solid #444;
+    }
+    header h1 {
+      color: #d4af37;
+      margin: 0;
+    }
+    main {
+      padding: 40px 20px;
+    }
+    input {
+      padding: 10px;
+      font-size: 18px;
+      border-radius: 8px;
+      border: none;
+      width: 200px;
+      background-color: #222;
+      color: #fff;
+    }
+    button {
+      background-color: #d4af37;
+      color: #000;
+      padding: 10px 20px;
+      margin-top: 10px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 18px;
+    }
+    .result-box {
+      margin-top: 30px;
+      background-color: #1a1a1a;
+      border: 1px solid #444;
+      border-radius: 12px;
+      padding: 20px;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    p {
+      font-size: 18px;
+      line-height: 1.6;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>💧 Fluid Calculator</h1>
+  </header>
+  <main>
+    <p>Enter patient weight (kg):</p>
+    <input type="number" id="weight" placeholder="e.g. 20" step="0.1">
+    <br>
+    <button onclick="calculateFluids()">Calculate</button>
+
+    <div class="result-box" id="results" style="display:none;">
+      <h2>Results</h2>
+      <p id="maintenance"></p>
+      <p id="bolus"></p>
+      <p id="deficit5"></p>
+      <p id="deficit7"></p>
+      <p id="deficit10"></p>
+    </div>
+  </main>
+
+  <script>
+    function calculateFluids() {
+      const weightInput = document.getElementById('weight').value;
+      const weight = parseFloat(weightInput);
+      if (!weight || weight <= 0) {
+        alert("Please enter a valid weight.");
+        return;
+      }
+
+      let maintenance = 0;
+      if (weight <= 10) {
+        maintenance = weight * 100;
+      } else if (weight <= 20) {
+        maintenance = 1000 + (weight - 10) * 50;
+      } else {
+        maintenance = 1500 + (weight - 20) * 20;
+      }
+      const maintenanceHr = (maintenance / 24).toFixed(1);
+
+      const bolus = (weight * 20).toFixed(1);
+      const deficit5 = ((weight * 0.05 * 1000) / 24).toFixed(1);
+      const deficit7 = ((weight * 0.07 * 1000) / 24).toFixed(1);
+      const deficit10 = ((weight * 0.10 * 1000) / 24).toFixed(1);
+
+      document.getElementById('maintenance').innerText = `Maintenance: ${maintenance.toFixed(1)} ml/day (${maintenanceHr} ml/hr)`;
+      document.getElementById('bolus').innerText = `Bolus (20 ml/kg): ${bolus} ml`;
+      document.getElementById('deficit5').innerText = `Deficit 5%: ${deficit5} ml/hr`;
+      document.getElementById('deficit7').innerText = `Deficit 7%: ${deficit7} ml/hr`;
+      document.getElementById('deficit10').innerText = `Deficit 10%: ${deficit10} ml/hr`;
+
+      document.getElementById('results').style.display = 'block';
+    }
+  </script>
+</body>
+</html>

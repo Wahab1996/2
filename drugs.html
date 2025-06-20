@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Emergency Drugs</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #111;
+            color: #fff;
+            margin: 0;
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+            color: #ffcc00;
+            margin-bottom: 40px;
+        }
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .card {
+            background-color: #222;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 0 12px rgba(255, 255, 255, 0.05);
+            transition: transform 0.2s;
+        }
+        .card:hover {
+            transform: scale(1.03);
+        }
+        .card h2 {
+            color: #ffcc00;
+            margin-top: 0;
+            margin-bottom: 10px;
+        }
+        .label {
+            font-weight: bold;
+            color: #ccc;
+        }
+        .card p {
+            margin: 5px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>💊 Emergency Drugs</h1>
+    <div class="grid-container">
+        <div class="card">
+            <h2>Adrenaline</h2>
+            <p><span class="label">Concentration:</span> 1:10,000</p>
+            <p><span class="label">Dose:</span> 0.01 mg/kg</p>
+            <p><span class="label">Route:</span> IV/IO</p>
+            <p><span class="label">Warning:</span> Max 1 mg</p>
+        </div>
+        <div class="card">
+            <h2>Atropine</h2>
+            <p><span class="label">Concentration:</span> 0.1 mg/mL</p>
+            <p><span class="label">Dose:</span> 0.02 mg/kg</p>
+            <p><span class="label">Route:</span> IV/IO</p>
+            <p><span class="label">Warning:</span> Min 0.1 mg, Max 0.5 mg</p>
+        </div>
+        <div class="card">
+            <h2>Amiodarone</h2>
+            <p><span class="label">Concentration:</span> 50 mg/mL</p>
+            <p><span class="label">Dose:</span> 5 mg/kg</p>
+            <p><span class="label">Route:</span> IV</p>
+            <p><span class="label">Warning:</span> Over 20-60 mins</p>
+        </div>
+        <div class="card">
+            <h2>Adenosine</h2>
+            <p><span class="label">Concentration:</span> 3 mg/mL</p>
+            <p><span class="label">Dose:</span> 0.1 mg/kg 1st, 0.2 mg/kg 2nd</p>
+            <p><span class="label">Route:</span> IV push</p>
+            <p><span class="label">Warning:</span> Rapid push with flush</p>
+        </div>
+        <div class="card">
+            <h2>Naloxone</h2>
+            <p><span class="label">Concentration:</span> 0.4 mg/mL</p>
+            <p><span class="label">Dose:</span> 0.1 mg/kg</p>
+            <p><span class="label">Route:</span> IV/IM</p>
+            <p><span class="label">Warning:</span> Max 2 mg</p>
+        </div>
+        <div class="card">
+            <h2>Dextrose 10%</h2>
+            <p><span class="label">Concentration:</span> 100 mg/mL</p>
+            <p><span class="label">Dose:</span> 2–5 mL/kg</p>
+            <p><span class="label">Route:</span> IV slow</p>
+            <p><span class="label">Warning:</span> Monitor glucose</p>
+        </div>
+        <div class="card">
+            <h2>Calcium Gluconate</h2>
+            <p><span class="label">Concentration:</span> 10%</p>
+            <p><span class="label">Dose:</span> 60–100 mg/kg</p>
+            <p><span class="label">Route:</span> IV slow</p>
+            <p><span class="label">Warning:</span> Cardiac monitoring</p>
+        </div>
+        <div class="card">
+            <h2>Sodium Bicarbonate</h2>
+            <p><span class="label">Concentration:</span> 8.4%</p>
+            <p><span class="label">Dose:</span> 1–2 mEq/kg</p>
+            <p><span class="label">Route:</span> IV</p>
+            <p><span class="label">Warning:</span> Flush line before/after</p>
+        </div>
+        <div class="card">
+            <h2>Magnesium Sulfate</h2>
+            <p><span class="label">Concentration:</span> 50%</p>
+            <p><span class="label">Dose:</span> 25–50 mg/kg</p>
+            <p><span class="label">Route:</span> IV over 30 mins</p>
+            <p><span class="label">Warning:</span> Max 2 g</p>
+        </div>
+    </div>
+</body>
+</html>
