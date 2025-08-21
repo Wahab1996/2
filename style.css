@@ -1,156 +1,76 @@
-/* ========== Base & Tokens (Additive) ========== */
-:root{
-  --bg-0:#111;                 /* fallback from original */
-  --bg-1:#0d0d0f;              /* أعمق شوي */
-  --ink:#fff;
-  --gold:#d4af37;              /* لونك الذهبي */
-  --gold-200:#e8d48a;
-  --gold-600:#b58f1f;
-  --line:#444;
-  --elev: 0 10px 30px hsl(0 0% 0% / .35);
-  --elev-soft: 0 6px 18px hsl(0 0% 0% / .2);
-  --radius: 14px;
-  --ui-speed: .25s;
-  --ui-ease: cubic-bezier(.22,.61,.36,1);
-}
-@media (prefers-color-scheme: light){
-  :root{
-    --bg-0:#f8f8fb;
-    --bg-1:#ffffff;
-    --ink:#151515;
-    --line:#e6e6ea;
-  }
-}
-
-/* تحسين اختيار النص */
-::selection{background: color-mix(in oklab, var(--gold), white 30%); color:#111}
-
-/* ========== الأصل + تحسينات ========== */
-body {
-  background-color: #111;
-  color: #fff;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  margin: 0;
-  padding: 0;
-
-  /* تحسينات إضافية (لا تغيّر البنية) */
-  background:
-    radial-gradient(1200px 600px at 15% -10%, hsla(46, 60%, 20%, .18), transparent 60%),
-    radial-gradient(900px 500px at 100% 20%, hsla(255, 50%, 20%, .16), transparent 60%),
-    linear-gradient(180deg, var(--bg-1), var(--bg-0));
-  color: var(--ink);
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-rendering: optimizeLegibility;
-  transition: background-color var(--ui-speed) var(--ui-ease), color var(--ui-speed) var(--ui-ease);
-}
-
-header {
-  background-color: #000;
-  padding: 20px;
-  text-align: center;
-  border-bottom: 1px solid #444;
-
-  /* فخامة خفيفة */
-  position: sticky; top: 0; z-index: 40;
-  backdrop-filter: saturate(140%) blur(10px);
-  background:
-    linear-gradient(to bottom, hsla(0,0%,100%,.04), transparent),
-    linear-gradient(180deg, #000, #050507);
-  border-bottom: 1px solid color-mix(in oklab, var(--line), #fff 8%);
-  box-shadow: var(--elev-soft);
-}
-
-header h1 {
-  color: #d4af37;
-  margin: 0;
-
-  /* تحسينات تايبوجرافي */
-  letter-spacing: .25px;
-  font-weight: 800;
-  text-shadow: 0 1px 0 hsla(0,0%,100%,.06), 0 8px 24px hsla(46,60%,45%,.12);
-  /* لمعة ذهبية رقيقة عند المرور */
-  transition: transform var(--ui-speed) var(--ui-ease), text-shadow var(--ui-speed) var(--ui-ease), color var(--ui-speed) var(--ui-ease);
-}
-header h1:hover{
-  color: color-mix(in oklab, var(--gold), white 8%);
-  transform: translateY(-1px);
-  text-shadow: 0 1px 0 hsla(0,0%,100%,.08), 0 14px 28px hsla(46,60%,45%,.18);
-}
-
-nav a {
-  margin: 0 15px;
-  color: #d4af37;
-  text-decoration: none;
-
-  /* تحسين تباين وتفاعل */
-  color: var(--gold);
-  padding: .55rem .9rem;
-  border-radius: 12px;
-  border: 1px solid transparent;
-  transition: color var(--ui-speed) var(--ui-ease),
-              background-color var(--ui-speed) var(--ui-ease),
-              border-color var(--ui-speed) var(--ui-ease),
-              transform var(--ui-speed) var(--ui-ease);
-  will-change: transform;
-}
-nav a:hover {
-  text-decoration: underline;
-
-  /* فخامة الهوف */
-  text-decoration-thickness: 2px;
-  text-underline-offset: 3px;
-  background-color: hsla(46, 60%, 55%, .08);
-  border-color: hsla(46, 60%, 45%, .18);
-  color: color-mix(in oklab, var(--gold), white 12%);
-  transform: translateY(-1px);
-}
-nav a:active{
-  transform: translateY(0);
-}
-
-main, h2, p {
-  padding: 20px;
-  text-align: center;
-
-  /* تحسين قراءة */
-  max-width: 85ch;
-  margin-inline: auto;
-}
-
-/* تنسيقات إضافية اختيارية بدون لمس الـ HTML */
-h2{
-  color: color-mix(in oklab, var(--ink), var(--gold) 30%);
-  font-weight: 700;
-  letter-spacing: .2px;
-}
-p{
-  color: color-mix(in oklab, var(--ink), #888 30%);
-  line-height: 1.7;
-}
-
-/* بطاقات عامة (لن تكسر شيء حتى لو ما استخدمتها) */
-.card{
-  background:
-    linear-gradient(180deg, hsla(0,0%,100%,.04), transparent),
-    #121216;
-  border: 1px solid color-mix(in oklab, var(--line), white 10%);
-  border-radius: var(--radius);
-  padding: 1.1rem;
-  box-shadow: var(--elev);
-  transition: transform var(--ui-speed) var(--ui-ease), box-shadow var(--ui-speed) var(--ui-ease);
-}
-.card:hover{ transform: translateY(-2px); box-shadow: 0 14px 44px hsla(0,0%,0%,.35) }
-
-/* تحكم بالحركة لمن يفضّل تقليلها */
-@media (prefers-reduced-motion: reduce){
-  *{transition-duration:.001ms !important; animation-duration:.001ms !important; scroll-behavior: auto !important}
-}
-
-/* تجاوبية لطيفة للخطوط */
-:root{
-  --fs-0: clamp(0.98rem, 0.92rem + .35vw, 1.06rem);
-  --fs-1: clamp(1.25rem, 1.05rem + .9vw, 1.6rem);
-}
-body{ font-size: var(--fs-0) }
-header h1{ font-size: var(--fs-1) }
+ body {
+   background-color: #111;
+   color: #fff;
+   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+   margin: 0;
+   padding: 0;
++  background:
++    radial-gradient(1200px 600px at 15% -10%, hsla(46, 60%, 20%, .18), transparent 60%),
++    radial-gradient(900px 500px at 100% 20%, hsla(255, 50%, 20%, .16), transparent 60%),
++    linear-gradient(180deg, var(--bg-1, #0d0d0f), var(--bg-0, #111));
++  -webkit-font-smoothing: antialiased;
++  -moz-osx-font-smoothing: grayscale;
++  text-rendering: optimizeLegibility;
++  transition: background-color .25s cubic-bezier(.22,.61,.36,1), color .25s cubic-bezier(.22,.61,.36,1);
+ }
+ header {
+   background-color: #000;
+   padding: 20px;
+   text-align: center;
+   border-bottom: 1px solid #444;
++  position: sticky; top: 0; z-index: 40;
++  backdrop-filter: saturate(140%) blur(10px);
++  background:
++    linear-gradient(to bottom, hsla(0,0%,100%,.04), transparent),
++    linear-gradient(180deg, #000, #050507);
++  border-bottom: 1px solid color-mix(in oklab, #444, #fff 8%);
++  box-shadow: 0 6px 18px hsla(0,0%,0%,.2);
+ }
+ header h1 {
+   color: #d4af37;
+   margin: 0;
++  letter-spacing: .25px;
++  font-weight: 800;
++  text-shadow: 0 1px 0 hsla(0,0%,100%,.06), 0 8px 24px hsla(46,60%,45%,.12);
++  transition: transform .25s cubic-bezier(.22,.61,.36,1), text-shadow .25s cubic-bezier(.22,.61,.36,1), color .25s cubic-bezier(.22,.61,.36,1);
+ }
++header h1:hover{
++  color: color-mix(in oklab, #d4af37, white 8%);
++  transform: translateY(-1px);
++  text-shadow: 0 1px 0 hsla(0,0%,100%,.08), 0 14px 28px hsla(46,60%,45%,.18);
++}
+ nav a {
+   margin: 0 15px;
+   color: #d4af37;
+   text-decoration: none;
++  padding: .55rem .9rem;
++  border-radius: 12px;
++  border: 1px solid transparent;
++  transition: color .25s cubic-bezier(.22,.61,.36,1), background-color .25s cubic-bezier(.22,.61,.36,1), border-color .25s cubic-bezier(.22,.61,.36,1), transform .25s cubic-bezier(.22,.61,.36,1);
++  will-change: transform;
+ }
+ nav a:hover {
+   text-decoration: underline;
++  text-decoration-thickness: 2px;
++  text-underline-offset: 3px;
++  background-color: hsla(46, 60%, 55%, .08);
++  border-color: hsla(46, 60%, 45%, .18);
++  color: color-mix(in oklab, #d4af37, white 12%);
++  transform: translateY(-1px);
+ }
++nav a:active{ transform: translateY(0) }
+ main, h2, p {
+   padding: 20px;
+   text-align: center;
++  max-width: 85ch;
++  margin-inline: auto;
+ }
++h2{
++  color: color-mix(in oklab, #fff, #d4af37 30%);
++  font-weight: 700;
++  letter-spacing: .2px;
++}
++p{
++  color: color-mix(in oklab, #fff, #888 30%);
++  line-height: 1.7;
++}
