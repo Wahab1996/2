@@ -1,121 +1,231 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Paediatric Emergency Tools | أدوات الطوارئ للأطفال</title>
-
-  <!-- SEO -->
-  <meta name="description" content="تطبيق ويب يوفر أدوات سريعة لأطباء طوارئ الأطفال: حاسبة السوائل، أدوية الطوارئ، خوارزميات، حالات حرجة، وGCS." />
-  <meta name="theme-color" content="#0b5aa2" media="(prefers-color-scheme: light)">
-  <meta name="theme-color" content="#0b5aa2" media="(prefers-color-scheme: dark)">
-  <meta property="og:title" content="Paediatric Emergency Tools" />
-  <meta property="og:description" content="وصول سريع لأدوات طوارئ الأطفال." />
-  <meta property="og:type" content="website" />
-
-  <!-- Fonts: Cairo + system fallback -->
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <meta charset="UTF-8">
+  <title>Paediatric Emergency Tools</title>
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@500;700&display=swap" rel="stylesheet">
-
-  <!-- Favicon (اختياري) -->
-  <link rel="icon" href="favicon.ico" />
-
-  <!-- Styles -->
-  <link rel="stylesheet" href="styles.css" />
-
-  <!-- Prefer Dark if user prefers -->
-  <meta name="color-scheme" content="light dark" />
+  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+  <style>
+    body {
+      font-family: 'Cairo', sans-serif;
+      background-color: #1c1c1c;
+      color: #eee;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      background-color: #111;
+      padding: 25px 0;
+      text-align: center;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.5);
+    }
+    header h1 {
+      margin: 0;
+      font-size: 28px;
+      color: #d4af37;
+    }
+    nav {
+      margin-top: 10px;
+    }
+    nav a {
+      color: #eee;
+      text-decoration: none;
+      margin: 0 15px;
+      font-size: 18px;
+      padding: 6px 12px;
+      transition: color 0.3s ease;
+    }
+    nav a:hover {
+      color: #d4af37;
+    }
+    main {
+      padding: 60px 20px;
+      text-align: center;
+    }
+    main h2 {
+      font-size: 30px;
+      color: #d4af37;
+    }
+    main p, h3 {
+      font-size: 20px;
+      margin-top: 20px;
+    }
+    .icon-nav {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 20px;
+      margin-top: 40px;
+    }
+    .icon-link {
+      background-color: #2a2a2a;
+      color: #eee;
+      text-decoration: none;
+      border-radius: 12px;
+      width: 200px;
+      padding: 20px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+      transition: transform 0.3s;
+    }
+    .icon-link:hover {
+      transform: translateY(-6px);
+      color: #d4af37;
+    }
+    .icon-link i {
+      font-size: 32px;
+      margin-bottom: 10px;
+      color: #d4af37;
+    }
+  </style>
 </head>
 
-<body>
-  <!-- Skip to content for keyboard users -->
-  <a class="skip-link" href="#main">تجاوز إلى المحتوى</a>
+<body style="font-family: 'Segoe UI', sans-serif; background-color: #f8fbff; color: #222;">
+<style>
+.card {
+    background-color: rgba(255, 255, 255, 0.85);
+    border: 1px solid #0077b6;
+    padding: 15px;
+    margin: 10px;
+    border-radius: 10px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+header {
+    background-color: #0077b6;
+    color: white;
+    padding: 1em;
+    text-align: center;
+    font-size: 1.4em;
+}
+</style>
 
-  <header class="site-header" role="banner">
-    <div class="container header-inner">
-      <h1 class="brand" title="Paediatric Emergency Tools">
-        <span aria-hidden="true">🩺</span>
-        <span class="brand-en" lang="en" dir="ltr">Paediatric Emergency Tools</span>
-      </h1>
-
-      <nav class="site-nav" role="navigation" aria-label="القائمة الرئيسية">
-        <ul class="nav-list">
-          <li><a class="nav-link" href="index.html" aria-current="page">الرئيسية</a></li>
-          <li><a class="nav-link" href="about.html">حول التطبيق</a></li>
-        </ul>
-      </nav>
-
-      <button id="themeToggle" class="theme-toggle" type="button" aria-pressed="false" aria-label="تبديل السمة">
-        <span class="sun" aria-hidden="true">☀️</span>
-        <span class="moon" aria-hidden="true">🌙</span>
-      </button>
-    </div>
+  <header>
+    <h1>Paediatric Emergency Tools</h1>
+    <nav>
+      <a href="index.html">الرئيسية</a>
+      <a href="about.html">حول التطبيق</a>
+    </nav>
   </header>
 
-  <main id="main" class="container main-content" role="main">
-    <section class="hero" aria-labelledby="hero-title">
-      <h2 id="hero-title">مرحبًا</h2>
-      <p class="lead">
-        هذا التطبيق يوفر وصولًا سريعًا لأدوات طوارئ الأطفال
-        <span lang="en" dir="ltr">(Paediatric Emergency)</span>.
-      </p>
-      <p class="sub">اختر أحد الأقسام للبدء:</p>
-    </section>
+  <main>
+    <h2>مرحبًا</h2>
+    <p>This app is a fast access for pediatric emergency doctors.</p>
+    <h3 style="text-align: center; direction: rtl;">اختر أحد الأقسام للبدء:</h3>
 
-    <section class="tools" aria-label="الأقسام">
-      <ul class="card-grid">
-        <li class="card">
-          <a class="card-link" href="calculators.html">
-            <div class="card-icon" aria-hidden="true">💧</div>
-            <h3 class="card-title">حاسبة السوائل</h3>
-            <p class="card-desc">حساب سريع للسوائل والجرعات المرتبطة.</p>
-          </a>
-        </li>
-
-        <li class="card">
-          <a class="card-link" href="drugs.html">
-            <div class="card-icon" aria-hidden="true">💊</div>
-            <h3 class="card-title">أدوية الطوارئ</h3>
-            <p class="card-desc">جرعات آمنة حسب الوزن والعمر.</p>
-          </a>
-        </li>
-
-        <li class="card">
-          <a class="card-link" href="algorithms.html">
-            <div class="card-icon" aria-hidden="true">📊</div>
-            <h3 class="card-title">الخوارزميات</h3>
-            <p class="card-desc">مسارات تشخيصية وعلاجية مختصرة.</p>
-          </a>
-        </li>
-
-        <li class="card">
-          <a class="card-link" href="critical.html">
-            <div class="card-icon" aria-hidden="true">🚨</div>
-            <h3 class="card-title">الحالات الحرجة</h3>
-            <p class="card-desc">إجراءات سريعة للحالات الطارئة.</p>
-          </a>
-        </li>
-
-        <li class="card">
-          <a class="card-link" href="gcs.html">
-            <div class="card-icon" aria-hidden="true">🧠</div>
-            <h3 class="card-title">مقياس غلاسكو (GCS)</h3>
-            <p class="card-desc">تقييم مستوى الوعي للأطفال.</p>
-          </a>
-        </li>
-      </ul>
-    </section>
+    <div class="icon-nav">
+      <a class="icon-link" href="calculators.html"><i class="fas fa-calculator"></i><br>💧 Fluid Calculator</a>
+      <a class="icon-link" href="drugs.html"><i class="fas fa-pills"></i><br>💊 Emergency Drugs</a>
+      <a class="icon-link" href="algorithms.html"><i class="fas fa-project-diagram"></i><br>📊 Algorithms</a>
+      <a class="icon-link" href="critical.html"><i class="fas fa-heartbeat"></i><br>🚨 Critical Cases</a>
+      <a class="icon-link" href="gcs.html"><i class="fas fa-brain"></i><br>🧠 GCS</a>
+    </div>
   </main>
 
-  <footer class="site-footer" role="contentinfo">
-    <div class="container footer-inner">
-      <p class="foot-note">
-        <span lang="en" dir="ltr">©</span>
-        <span>2025</span> — أدوات الطوارئ للأطفال
-      </p>
-    </div>
-  </footer>
 
-  <script src="app.js" defer></script>
+<style>
+  .theme-toggle {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: #0077b6;
+    color: white;
+    border: none;
+    border-radius: 20px;
+    padding: 10px 16px;
+    cursor: pointer;
+    font-size: 16px;
+    z-index: 9999;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+  }
+
+  .dark-mode {
+    background-color: #111 !important;
+    color: #f1f1f1 !important;
+  }
+
+  .dark-mode .card {
+    background-color: #1a1a1a !important;
+    color: #f1f1f1 !important;
+    border-color: #444 !important;
+  }
+
+  .dark-mode header {
+    background-color: #000 !important;
+    color: #d4af37 !important;
+  }
+
+  .dark-mode a {
+    color: #9dd9ff !important;
+  }
+</style>
+
+<script>
+  function toggleTheme() {
+    document.body.classList.toggle('dark-mode');
+    localStorage.setItem('theme', document.body.classList.contains('dark-mode') ? 'dark' : 'light');
+  }
+
+  window.onload = function() {
+    if (localStorage.getItem('theme') === 'dark') {
+      document.body.classList.add('dark-mode');
+    }
+  }
+</script>
+
+<button class="theme-toggle" onclick="toggleTheme()">🌓</button>
+
 </body>
+<style>
+  .theme-toggle {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: #0077b6;
+    color: white;
+    border: none;
+    border-radius: 20px;
+    padding: 10px 16px;
+    cursor: pointer;
+    font-size: 16px;
+    z-index: 9999;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+  }
+
+  .dark-mode {
+    background-color: #111 !important;
+    color: #f1f1f1 !important;
+  }
+
+  .dark-mode .card {
+    background-color: #1a1a1a !important;
+    color: #f1f1f1 !important;
+    border-color: #444 !important;
+  }
+
+  .dark-mode header {
+    background-color: #000 !important;
+    color: #d4af37 !important;
+  }
+
+  .dark-mode a {
+    color: #9dd9ff !important;
+  }
+</style>
+
+<script>
+  function toggleTheme() {
+    document.body.classList.toggle('dark-mode');
+    localStorage.setItem('theme', document.body.classList.contains('dark-mode') ? 'dark' : 'light');
+  }
+
+  window.onload = function() {
+    if (localStorage.getItem('theme') === 'dark') {
+      document.body.classList.add('dark-mode');
+    }
+  }
+</script>
+
+<button class="theme-toggle" onclick="toggleTheme()">🌓</button>
+
+</body>
+
 </html>
