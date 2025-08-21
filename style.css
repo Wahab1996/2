@@ -1,76 +1,168 @@
- body {
-   background-color: #111;
-   color: #fff;
-   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-   margin: 0;
-   padding: 0;
-+  background:
-+    radial-gradient(1200px 600px at 15% -10%, hsla(46, 60%, 20%, .18), transparent 60%),
-+    radial-gradient(900px 500px at 100% 20%, hsla(255, 50%, 20%, .16), transparent 60%),
-+    linear-gradient(180deg, var(--bg-1, #0d0d0f), var(--bg-0, #111));
-+  -webkit-font-smoothing: antialiased;
-+  -moz-osx-font-smoothing: grayscale;
-+  text-rendering: optimizeLegibility;
-+  transition: background-color .25s cubic-bezier(.22,.61,.36,1), color .25s cubic-bezier(.22,.61,.36,1);
- }
- header {
-   background-color: #000;
-   padding: 20px;
-   text-align: center;
-   border-bottom: 1px solid #444;
-+  position: sticky; top: 0; z-index: 40;
-+  backdrop-filter: saturate(140%) blur(10px);
-+  background:
-+    linear-gradient(to bottom, hsla(0,0%,100%,.04), transparent),
-+    linear-gradient(180deg, #000, #050507);
-+  border-bottom: 1px solid color-mix(in oklab, #444, #fff 8%);
-+  box-shadow: 0 6px 18px hsla(0,0%,0%,.2);
- }
- header h1 {
-   color: #d4af37;
-   margin: 0;
-+  letter-spacing: .25px;
-+  font-weight: 800;
-+  text-shadow: 0 1px 0 hsla(0,0%,100%,.06), 0 8px 24px hsla(46,60%,45%,.12);
-+  transition: transform .25s cubic-bezier(.22,.61,.36,1), text-shadow .25s cubic-bezier(.22,.61,.36,1), color .25s cubic-bezier(.22,.61,.36,1);
- }
-+header h1:hover{
-+  color: color-mix(in oklab, #d4af37, white 8%);
-+  transform: translateY(-1px);
-+  text-shadow: 0 1px 0 hsla(0,0%,100%,.08), 0 14px 28px hsla(46,60%,45%,.18);
-+}
- nav a {
-   margin: 0 15px;
-   color: #d4af37;
-   text-decoration: none;
-+  padding: .55rem .9rem;
-+  border-radius: 12px;
-+  border: 1px solid transparent;
-+  transition: color .25s cubic-bezier(.22,.61,.36,1), background-color .25s cubic-bezier(.22,.61,.36,1), border-color .25s cubic-bezier(.22,.61,.36,1), transform .25s cubic-bezier(.22,.61,.36,1);
-+  will-change: transform;
- }
- nav a:hover {
-   text-decoration: underline;
-+  text-decoration-thickness: 2px;
-+  text-underline-offset: 3px;
-+  background-color: hsla(46, 60%, 55%, .08);
-+  border-color: hsla(46, 60%, 45%, .18);
-+  color: color-mix(in oklab, #d4af37, white 12%);
-+  transform: translateY(-1px);
- }
-+nav a:active{ transform: translateY(0) }
- main, h2, p {
-   padding: 20px;
-   text-align: center;
-+  max-width: 85ch;
-+  margin-inline: auto;
- }
-+h2{
-+  color: color-mix(in oklab, #fff, #d4af37 30%);
-+  font-weight: 700;
-+  letter-spacing: .2px;
-+}
-+p{
-+  color: color-mix(in oklab, #fff, #888 30%);
-+  line-height: 1.7;
-+}
+/* =========================================
+   Elegant Gold UI — CSS Theme
+   Author: HTML + CSS + Javascript (🔨🤖🔧)
+   Features: Glassy navbar, gradient hero, fluid type,
+             RTL-aware, smooth transitions, reduced-motion friendly
+   ========================================= */
+
+/* 0) Reset راقي وخفيف */
+*,*::before,*::after{box-sizing:border-box}
+html:focus-within{scroll-behavior:smooth}
+body,h1,h2,h3,h4,p,figure,blockquote,dl,dd{margin:0}
+img,svg,video,canvas{display:block;max-width:100%}
+button,input,select,textarea{font:inherit;color:inherit}
+a{text-decoration:none;color:inherit}
+:focus-visible{outline:2px solid var(--brand);outline-offset:2px}
+
+/* 1) Tokens */
+:root{
+  /* لوحة ألوان */
+  --h: 44;   /* ذهبي دافئ */
+  --s: 85%;
+  --l: 52%;
+  --brand: hsl(var(--h) var(--s) var(--l));          /* Gold */
+  --brand-700: hsl(var(--h) calc(var(--s) - 18%) calc(var(--l) - 18%));
+  --accent: hsl(262 65% 60%);                        /* Purple hint */
+  --bg-0: #0c0c0f;                                   /* خلفية عميقة */
+  --bg-1: #101116;
+  --surface: #14161c;
+  --ink: #f5f7ff;
+  --muted: hsl(220 10% 70%);
+  --line: hsl(220 10% 22%);
+  --glass: hsl(0 0% 100% / .06);
+  --soft: hsl(0 0% 100% / .08);
+
+  /* شعور واجهة */
+  --radius: 14px;
+  --radius-sm: 10px;
+  --radius-pill: 999px;
+  --shadow-1: 0 10px 30px hsl(0 0% 0% / .25);
+  --shadow-2: 0 18px 60px hsl(0 0% 0% / .35);
+  --speed: .25s;
+  --easing: cubic-bezier(.22,.61,.36,1);
+
+  /* تايبوجرافي سائلة */
+  --step--1: clamp(.85rem, .8rem + .4vw, .95rem);
+  --step-0: clamp(1rem, .95rem + .5vw, 1.1rem);
+  --step-1: clamp(1.25rem, 1.05rem + 1vw, 1.6rem);
+  --step-2: clamp(1.6rem, 1.2rem + 1.6vw, 2.2rem);
+  --step-3: clamp(2.2rem, 1.6rem + 3vw, 3.2rem);
+
+  --container: min(1120px, 92%);
+}
+@media (prefers-color-scheme: light){
+  :root{
+    --bg-0:#fbfbfd; --bg-1:#fff; --surface:#fff;
+    --ink:#16181d; --muted:hsl(220 6% 40%); --line:hsl(220 15% 88%);
+    --shadow-1: 0 10px 30px hsl(220 30% 20% / .08);
+    --shadow-2: 0 22px 70px hsl(220 30% 30% / .12);
+  }
+}
+
+/* 2) القاعدة */
+html{color-scheme:dark light}
+body{
+  min-height:100svh; background: var(--bg-0); color: var(--ink);
+  font-family: ui-sans-serif, -apple-system, Segoe UI, Roboto, "Noto Kufi Arabic", Tajawal, Cairo, Inter, Arial, sans-serif;
+  font-size: var(--step-0); line-height:1.65;
+  -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;
+  background:
+    radial-gradient(900px 420px at 8% -10%, color-mix(in oklab, var(--brand), black 75%) 0%, transparent 60%),
+    radial-gradient(900px 420px at 100% 10%, color-mix(in oklab, var(--accent), black 72%) 0%, transparent 55%),
+    linear-gradient(180deg, var(--bg-1), var(--bg-0));
+}
+
+/* 3) Helpers */
+.container{width: var(--container); margin-inline:auto; padding-inline: clamp(0rem, 1vw, .5rem)}
+.stack{display:flex;flex-direction:column;gap:clamp(.75rem,1.2vw,1.2rem)}
+.grid{display:grid; gap:clamp(.9rem,1.2vw,1.4rem)}
+.grid--3{grid-template-columns: repeat(3, minmax(0, 1fr))}
+@media (max-width: 880px){.grid--3{grid-template-columns: 1fr 1fr}}
+@media (max-width: 580px){.grid--3{grid-template-columns: 1fr}}
+.center{text-align:center}
+.muted{color:var(--muted)}
+.hr{height:1px;background:var(--line);opacity:.5;border-radius:2px}
+
+/* 4) Navbar زجاجي */
+.navbar{
+  position: sticky; top: 0; z-index: 50;
+  backdrop-filter: saturate(160%) blur(12px);
+  background: linear-gradient(to bottom, var(--glass), transparent);
+  border-bottom:1px solid color-mix(in oklab, var(--line), white 18%);
+}
+.navbar .inner{display:flex;align-items:center;gap:1rem;padding:.9rem 0}
+.brand{display:flex;align-items:center;gap:.7rem;font-weight:800}
+.brand .logo{width:28px;height:28px;border-radius:8px;background:
+  conic-gradient(from 220deg at 50% 50%, var(--brand), var(--accent), var(--brand)); box-shadow: var(--shadow-1)}
+.nav{display:flex;gap:.4rem;margin-inline:auto}
+.nav a{
+  padding:.55rem .9rem;border-radius:12px;border:1px solid transparent;color:var(--muted);
+  transition:color var(--speed) var(--easing), background var(--speed) var(--easing), border-color var(--speed) var(--easing), transform var(--speed) var(--easing);
+}
+.nav a:hover{color:var(--ink);background:var(--soft);border-color:var(--soft);transform:translateY(-1px)}
+.nav .cta{margin-inline-start:.25rem}
+.btn{
+  display:inline-flex;align-items:center;gap:.55rem;padding:.65rem 1rem;border-radius:12px;border:1px solid var(--soft);
+  background: linear-gradient(135deg, var(--brand), var(--brand-700)); color:white; box-shadow: var(--shadow-1);
+  transition: transform var(--speed) var(--easing), box-shadow var(--speed) var(--easing), filter var(--speed) var(--easing);
+}
+.btn:hover{transform:translateY(-1px); box-shadow: var(--shadow-2); filter:saturate(110%)}
+.btn:active{transform:translateY(0)}
+
+:root[dir="rtl"] .nav{flex-direction:row-reverse}
+
+/* 5) Hero متدرّج فخم */
+.hero{
+  padding-block: clamp(3rem, 6vw, 6rem);
+  background:
+    radial-gradient(1200px 600px at 10% -20%, color-mix(in oklab, var(--brand), black 78%) 0%, transparent 60%),
+    radial-gradient(1200px 600px at 100% 0%, color-mix(in oklab, var(--accent), black 78%) 0%, transparent 55%);
+}
+.hero h1{font-size: var(--step-3); line-height:1.15; letter-spacing:.2px; font-weight:900}
+.hero p{font-size: var(--step-1); color: var(--muted); max-width: 70ch; margin-inline:auto}
+.hero .actions{display:flex;gap:.6rem;justify-content:center;flex-wrap:wrap;margin-top:clamp(1rem,1.5vw,1.8rem)}
+.btn--soft{background: var(--surface); color: var(--ink); border-color: var(--soft)}
+
+/* 6) Cards */
+.card{
+  background:
+   linear-gradient(180deg, hsl(0 0% 100% / .05), transparent),
+   var(--surface);
+  border:1px solid color-mix(in oklab, var(--line), white 16%);
+  border-radius: var(--radius);
+  padding: clamp(1rem, 1.3vw, 1.5rem);
+  box-shadow: var(--shadow-1);
+  transition: transform var(--speed) var(--easing), box-shadow var(--speed) var(--easing);
+}
+.card:hover{transform:translateY(-3px); box-shadow: var(--shadow-2)}
+.card h3{font-size: var(--step-1); margin-bottom:.4rem}
+.card p{color:var(--muted)}
+
+/* 7) Sections */
+.section{padding-block: clamp(2rem, 4vw, 3.5rem)}
+.section h2{font-size: var(--step-2); letter-spacing:.3px; font-weight:800; margin-bottom: .6rem}
+.section .lead{font-size: var(--step-1); color: var(--muted); max-width: 72ch; margin-inline:auto}
+
+/* 8) Footer */
+.footer{
+  padding: 1.4rem 0; color: var(--muted);
+  border-top: 1px solid color-mix(in oklab, var(--line), white 12%);
+  background: linear-gradient(to top, var(--glass), transparent);
+}
+
+/* 9) Theme Toggle (اختياري) */
+.theme-toggle{
+  display:inline-flex;align-items:center;gap:.5rem;padding:.45rem .7rem;border-radius:10px;border:1px solid var(--soft);
+  background:var(--surface); color:var(--ink); cursor:pointer; user-select:none
+}
+.theme-toggle input{appearance:none; width:0; height:0}
+
+/* 10) Reduced motion */
+@media (prefers-reduced-motion: reduce){
+  *{animation-duration:.01ms !important; animation-iteration-count:1 !important; transition-duration:.01ms !important; scroll-behavior:auto !important}
+}
+
+/* 11) Utilities */
+.kbd{font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; background: var(--surface); border:1px solid var(--soft); padding:.2rem .45rem; border-radius:.4rem}
+.badge{display:inline-flex;align-items:center;gap:.35rem;padding:.35rem .6rem;border-radius: var(--radius-pill);border:1px solid var(--soft);background:var(--surface);color:var(--muted)}
+.badge--gold{background: color-mix(in oklab, var(--brand), white 14%); color:#1a1200; border-color: color-mix(in oklab, var(--brand), black 18%)}
