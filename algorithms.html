@@ -1,580 +1,451 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en" dir="ltr">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Emergency Algorithms</title>
+
+  <!-- Design tokens -->
   <style>
-    body {
-      background-color: #111;
-      color: #fff;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      margin: 0;
-      padding: 0;
+    :root{
+      --bg: #0b1220;
+      --bg-soft: #0f172a;
+      --surface: #0f172a;
+      --card: #0f1b2e;
+      --text: #e6eaf2;
+      --muted:#9aa6b2;
+      --brand:#00b4d8;     /* close to your #0077b6 family */
+      --brand-ink:#003b5c;
+      --accent:#d4af37;    /* your gold */
+      --radius:14px;
+      --shadow: 0 10px 30px rgba(0,0,0,.25);
+      --container: 980px;
     }
-    header {
-      background-color: #000;
-      padding: 30px 20px;
-      text-align: center;
-      border-bottom: 1px solid #444;
+    @media (prefers-color-scheme: light){
+      :root{
+        --bg:#ffffff;
+        --bg-soft:#f7fbff;
+        --surface:#ffffff;
+        --card:#ffffff;
+        --text:#0f172a;
+        --muted:#53657a;
+        --shadow: 0 10px 24px rgba(2,6,23,.08);
+      }
     }
-    header h1 {
-      color: #d4af37;
-      margin: 0;
-      font-size: 28px;
+
+    /* Base */
+    *,*::before,*::after{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+      background: linear-gradient(180deg, var(--bg) 0%, var(--bg-soft) 100%);
+      color:var(--text);
+      line-height:1.7;
     }
-    .container {
-      padding: 30px 20px;
-      max-width: 900px;
-      margin: auto;
+    a{color:var(--brand);text-decoration:none}
+    a:hover{text-decoration:underline}
+    :focus-visible{outline:3px solid var(--brand);outline-offset:2px}
+
+    .container{
+      max-width:var(--container);
+      margin-inline:auto;
+      padding-inline:1rem;
     }
-    .accordion {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      text-align: center;
-      margin-top: 25px;
-      margin-bottom: 25px;
-      font-size: 18px;
-      padding: 26px;
 
-      background-color: #1a1a1a;
-      color: #fff;
-      cursor: pointer;
-      padding: 22px;
-      width: 100%;
-      text-align: left;
-      border: none;
-      outline: none;
-      font-size: 17px;
-      transition: 0.4s;
-      margin-bottom: 10px;
-      border-radius: 8px;
-      border: 1px solid #444;
+    /* Header */
+    header.site-header{
+      position:sticky; top:0; z-index:50;
+      background: color-mix(in oklab, var(--bg) 88%, transparent);
+      backdrop-filter: blur(10px);
+      border-bottom:1px solid color-mix(in oklab, var(--text) 12%, transparent);
     }
-    .accordion:hover {
-      background-color: #2c2c2c;
+    .brand{
+      display:flex;align-items:center;gap:.6rem;
+      font-weight:800; letter-spacing:.3px; color:var(--text);
     }
-    .active, .accordion:active {
-      background-color: #333;
+    .brand .logo{
+      inline-size:36px; block-size:36px; border-radius:8px;
+      background: linear-gradient(135deg,var(--brand),#38d9ff);
+      display:grid;place-items:center; color:#002b3b; font-weight:900;
+      box-shadow: var(--shadow);
     }
-    
-    ol {
-      padding-left: 20px;
+    .header-inner{
+      display:flex; align-items:center; justify-content:space-between;
+      min-height:72px;
     }
-    li {
-      margin-bottom: 10px;
-      line-height: 1.6;
+
+    /* Hero */
+    .hero{
+      display:grid; gap:2rem; align-items:center;
+      grid-template-columns: 1.2fr .8fr;
+      padding: clamp(1.5rem, 4vw, 3rem) 0;
     }
-    
-  
-.accordion-content {
-    background-color: #333 !important;
-    color: #f1f1f1 !important;
-    padding: 15px;
-    border-radius: 8px;
-}
-.accordion-content strong {
-    color: #fff !important;
-}
+    .hero h1{margin:.2rem 0 .5rem; font-size:clamp(1.6rem, 4vw, 2.2rem)}
+    .badge{
+      display:inline-flex;align-items:center;gap:.5rem;
+      background: color-mix(in oklab, var(--brand) 15%, transparent);
+      color: var(--text);
+      border:1px solid color-mix(in oklab, var(--brand) 40%, transparent);
+      padding:.35rem .6rem; border-radius:999px; font-size:.9rem;
+    }
+    .hero-card{
+      background:var(--card); border:1px solid color-mix(in oklab, var(--text) 12%, transparent);
+      border-radius:var(--radius); padding:1rem; box-shadow:var(--shadow);
+    }
+    .hero-visual{
+      border-radius:var(--radius); overflow:hidden; box-shadow:var(--shadow);
+      border:1px solid color-mix(in oklab, var(--text) 10%, transparent);
+      min-height:220px; background:
+        linear-gradient(135deg, rgba(0,180,216,.15), rgba(212,175,55,.15)),
+        radial-gradient(1200px 500px at 80% -20%, rgba(0,180,216,.15), transparent 70%),
+        radial-gradient(900px 500px at 0% 120%, rgba(212,175,55,.12), transparent 70%);
+    }
 
+    /* Accordion */
+    .accordion{
+      display:grid; gap:12px; margin-block: 1rem 2.2rem;
+    }
+    .acc-item{
+      border:1px solid color-mix(in oklab, var(--text) 14%, transparent);
+      border-radius:12px; overflow:hidden; background:var(--surface);
+      box-shadow: var(--shadow);
+    }
+    .acc-trigger{
+      all:unset; display:flex; align-items:center; gap:.9rem;
+      cursor:pointer; width:100%; padding:1rem 1.1rem;
+      background:linear-gradient(0deg, transparent, color-mix(in oklab, var(--text) 6%, transparent));
+    }
+    .acc-trigger:hover{ background: color-mix(in oklab, var(--text) 8%, transparent); }
+    .acc-trigger .num{font-weight:800; color:var(--accent)}
+    .acc-trigger .title{flex:1; font-weight:700}
+    .acc-trigger .chev{transition:transform .2s ease; color:var(--muted)}
+    .acc-panel{
+      display:grid; grid-template-rows: 0fr;
+      transition: grid-template-rows .25s ease;
+      background: color-mix(in oklab, var(--text) 4%, transparent);
+      border-top:1px solid color-mix(in oklab, var(--text) 10%, transparent);
+    }
+    .acc-panel > .panel-inner{
+      overflow:hidden; padding:0 1.1rem;
+    }
+    .acc-item[aria-expanded="true"] .acc-panel{ grid-template-rows: 1fr; }
+    .acc-item[aria-expanded="true"] .panel-inner{ padding: 1rem 1.1rem 1.2rem; }
+    .acc-item[aria-expanded="true"] .chev{ transform: rotate(180deg); }
 
+    /* List formatting from your content */
+    ol{ padding-left: 1.2rem; margin: .4rem 0 0 }
+    li{ margin-bottom: .55rem; line-height:1.7 }
+    strong{ color: var(--text) }
+    .note{ color: var(--muted); font-style: italic; margin-top:.6rem }
 
+    /* Footer */
+    .site-footer{
+      margin-top:2rem; padding:1.4rem 0; color:var(--muted);
+      border-top:1px solid color-mix(in oklab, var(--text) 12%, transparent);
+    }
 
+    /* Utilities */
+    .pill{display:inline-block; padding:.2rem .5rem; border:1px solid color-mix(in oklab, var(--text) 16%, transparent);
+      border-radius:999px; color:var(--muted); font-size:.85rem}
+    .sr-only{
+      position:absolute !important; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden;
+      clip:rect(0,0,0,0); border:0;
+    }
 
+    /* Responsive */
+    @media (max-width: 900px){
+      .hero{ grid-template-columns: 1fr; }
+    }
 
-.panel {
-  display: none;
-  background-color: #f9f9f9 !important;
-  color: #222 !important;
-  padding: 20px !important;
-  font-size: 16px;
-  line-height: 1.7;
-  border-radius: 0 0 8px 8px;
-  border-left: 1px solid #ccc;
-  border-right: 1px solid #ccc;
-  border-bottom: 1px solid #ccc;
-}
-
-.panel strong {
-  color: #000 !important;
-}
-.panel em, .note {
-  color: #555 !important;
-  font-style: italic;
-}
-
-</style>
-
-
+    /* Print-friendly (compact, white) */
+    @media print{
+      :root{ --bg:#fff; --bg-soft:#fff; --surface:#fff; --card:#fff; --text:#000; --muted:#333; --shadow:none }
+      .hero-visual{ display:none }
+      header.site-header{ position:static; background:#fff }
+      .acc-trigger{ background:#fff; border-bottom:1px solid #ddd }
+      .acc-panel{ grid-template-rows: 1fr !important }
+      .panel-inner{ padding: .8rem 0 1rem !important }
+      .site-footer{ color:#444 }
+    }
+  </style>
 </head>
+<body>
 
-<body style="font-family: 'Segoe UI', sans-serif; background-color: #f8fbff; color: #222;">
-<style>
-.card {
-    background-color: rgba(255, 255, 255, 0.85);
-    border: 1px solid #0077b6;
-    padding: 15px;
-    margin: 10px;
-    border-radius: 10px;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-}
-header {
-    background-color: #0077b6;
-    color: white;
-    padding: 1em;
-    text-align: center;
-    font-size: 1.4em;
-}
-
-.accordion-content {
-    background-color: #333 !important;
-    color: #f1f1f1 !important;
-    padding: 15px;
-    border-radius: 8px;
-}
-.accordion-content strong {
-    color: #fff !important;
-}
-
-
-
-
-
-
-.panel {
-  display: none;
-  background-color: #f9f9f9 !important;
-  color: #222 !important;
-  padding: 20px !important;
-  font-size: 16px;
-  line-height: 1.7;
-  border-radius: 0 0 8px 8px;
-  border-left: 1px solid #ccc;
-  border-right: 1px solid #ccc;
-  border-bottom: 1px solid #ccc;
-}
-
-.panel strong {
-  color: #000 !important;
-}
-.panel em, .note {
-  color: #555 !important;
-  font-style: italic;
-}
-
-</style>
-
-
-
-  <header>
-    <h1>📋 Emergency Algorithms</h1>
+  <!-- Header -->
+  <header class="site-header">
+    <div class="container header-inner" role="banner">
+      <a href="#" class="brand" aria-label="Emergency Algorithms — Home">
+        <span class="logo">EA</span>
+        <span>Emergency Algorithms</span>
+      </a>
+      <span class="pill" aria-hidden="true">Keyboard-friendly • A11y</span>
+    </div>
   </header>
-  <div class="container">
 
-    <button class="accordion">1. Status Epilepticus 🔄</button>
-    <div class="panel">
-      <ol>
-<li>
-<strong>
-       0–5 min:
-      </strong>
-      ABCs, O2, IV/IO access, check glucose.
-     </li>
-<li>
-<strong>
-       5–10 min:
-      </strong>
-      Benzodiazepine:
-      <br/>
-      • Diazepam 0.3 mg/kg IV (max 10 mg) OR
-      <br/>
-      • Midazolam 0.2 mg/kg IM/intranasal
-     </li>
-<li>
-<strong>
-       10–20 min:
-      </strong>
-      Repeat benzodiazepine if seizures persist.
-     </li>
-<li>
-<strong>
-       20–40 min:
-      </strong>
-      Load with:
-      <br/>
-      • Levetiracetam 40 mg/kg IV (max 3 g) OR
-      <br/>
-      • Phenytoin/Fosphenytoin 20 mg PE/kg IV
-     </li>
-<li>
-<strong>
-       40–60 min:
-      </strong>
-      If seizure continues, prepare for intubation + continuous infusion (Midazolam, Propofol).
-     </li>
-<li>
-<em>
-       Call ICU / Neurology.
-      </em>
-</li>
-</ol>
+  <!-- Hero -->
+  <section class="container hero">
+    <div class="hero-card" role="region" aria-labelledby="title">
+      <span class="badge" id="title">📋 Emergency Algorithms</span>
+      <h1>Quick-reference protocols with clean, accessible UI</h1>
       <p class="note">
-     📝 Always check glucose and calcium levels. Ensure adequate oxygenation.
-    </p>
+        The dosing/steps below are exactly as provided by you. This is UI polish only — not medical advice.
+      </p>
     </div>
-    
-    <button class="accordion">2. Postictal Seizure Management 🧠</button>
-    <div class="panel">
-      <ol>
-<li>
-<strong>
-       1. Ensure Safety:
-      </strong>
-      Place patient in lateral position, clear surroundings.
-     </li>
-<li>
-<strong>
-       2. ABC Assessment:
-      </strong>
-      Airway, breathing, and circulation evaluation. Administer oxygen if needed.
-     </li>
-<li>
-<strong>
-       3. Monitor Vital Signs:
-      </strong>
-      HR, RR, BP, oxygen saturation.
-     </li>
-<li>
-<strong>
-       4. Neurological Exam:
-      </strong>
-      Assess GCS, focal deficits, and recovery progression.
-     </li>
-<li>
-<strong>
-       5. Blood Glucose:
-      </strong>
-      Check for hypoglycemia and treat if necessary.
-     </li>
-<li>
-<strong>
-       6. Observe:
-      </strong>
-      Allow time for recovery (usually 15–60 minutes).
-     </li>
-<li>
-<strong>
-       7. Identify Trigger:
-      </strong>
-      Fever, infection, missed medications, metabolic causes.
-     </li>
-<li>
-<strong>
-       8. Document:
-      </strong>
-      Duration of seizure, postictal phase, interventions given.
-     </li>
-</ol>
-      <p class="note">
-     📝 Avoid unnecessary medications. Most postictal states resolve spontaneously.
-    </p>
+    <div class="hero-visual" aria-hidden="true"></div>
+  </section>
+
+  <!-- Accordion -->
+  <main class="container" id="content">
+    <div class="accordion" role="list">
+      <!-- 1 -->
+      <section class="acc-item" aria-expanded="false">
+        <button class="acc-trigger" aria-controls="p1" aria-expanded="false">
+          <span class="num">1.</span>
+          <span class="title">Status Epilepticus 🔄</span>
+          <span class="chev">▾</span>
+        </button>
+        <div class="acc-panel" id="p1" role="region" aria-label="Status Epilepticus">
+          <div class="panel-inner">
+            <ol>
+              <li><strong>0–5 min:</strong> ABCs, O2, IV/IO access, check glucose.</li>
+              <li><strong>5–10 min:</strong> Benzodiazepine:<br>
+                • Diazepam 0.3 mg/kg IV (max 10 mg) OR<br>
+                • Midazolam 0.2 mg/kg IM/intranasal
+              </li>
+              <li><strong>10–20 min:</strong> Repeat benzodiazepine if seizures persist.</li>
+              <li><strong>20–40 min:</strong> Load with:<br>
+                • Levetiracetam 40 mg/kg IV (max 3 g) OR<br>
+                • Phenytoin/Fosphenytoin 20 mg PE/kg IV
+              </li>
+              <li><strong>40–60 min:</strong> If seizure continues, prepare for intubation + continuous infusion (Midazolam, Propofol).</li>
+              <li><em>Call ICU / Neurology.</em></li>
+            </ol>
+            <p class="note">📝 Always check glucose and calcium levels. Ensure adequate oxygenation.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 2 -->
+      <section class="acc-item" aria-expanded="false">
+        <button class="acc-trigger" aria-controls="p2" aria-expanded="false">
+          <span class="num">2.</span>
+          <span class="title">Postictal Seizure Management 🧠</span>
+          <span class="chev">▾</span>
+        </button>
+        <div class="acc-panel" id="p2" role="region" aria-label="Postictal Seizure Management">
+          <div class="panel-inner">
+            <ol>
+              <li><strong>1. Ensure Safety:</strong> Place patient in lateral position, clear surroundings.</li>
+              <li><strong>2. ABC Assessment:</strong> Airway, breathing, and circulation evaluation. Administer oxygen if needed.</li>
+              <li><strong>3. Monitor Vital Signs:</strong> HR, RR, BP, oxygen saturation.</li>
+              <li><strong>4. Neurological Exam:</strong> Assess GCS, focal deficits, and recovery progression.</li>
+              <li><strong>5. Blood Glucose:</strong> Check for hypoglycemia and treat if necessary.</li>
+              <li><strong>6. Observe:</strong> Allow time for recovery (usually 15–60 minutes).</li>
+              <li><strong>7. Identify Trigger:</strong> Fever, infection, missed medications, metabolic causes.</li>
+              <li><strong>8. Document:</strong> Duration of seizure, postictal phase, interventions given.</li>
+            </ol>
+            <p class="note">📝 Avoid unnecessary medications. Most postictal states resolve spontaneously.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 3 -->
+      <section class="acc-item" aria-expanded="false">
+        <button class="acc-trigger" aria-controls="p3" aria-expanded="false">
+          <span class="num">3.</span>
+          <span class="title">DKA Management 💉</span>
+          <span class="chev">▾</span>
+        </button>
+        <div class="acc-panel" id="p3" role="region" aria-label="DKA Management">
+          <div class="panel-inner">
+            <ol>
+              <li><strong>1. Initial Assessment:</strong> ABCs, vital signs, mental status, weight, hydration level.</li>
+              <li><strong>2. Labs:</strong> Blood glucose, electrolytes, BUN/Cr, ABG/VBG, urine ketones, β-hydroxybutyrate.</li>
+              <li><strong>3. Fluid Replacement:</strong><br>
+                • Start with 10–20 ml/kg NS bolus over 1–2 hours (if in shock).<br>
+                • Then maintenance + deficit correction over 48 hrs.
+              </li>
+              <li><strong>4. Insulin Therapy:</strong><br>
+                • Start 1–2 hrs after fluids.<br>
+                • Regular insulin 0.05–0.1 units/kg/hr IV infusion.
+              </li>
+              <li><strong>5. Potassium Replacement:</strong><br>
+                • Add K⁺ when urine output established and K⁺ &lt;5.5 mmol/L.<br>
+                • Typical: 20–40 mEq/L KCl or KPhos.
+              </li>
+              <li><strong>6. Monitor:</strong> Glucose, pH, K⁺, Na⁺, anion gap every 1–2 hrs.</li>
+              <li><strong>7. Transition:</strong> Switch to SC insulin when patient eating, gap closed, pH normalized.</li>
+            </ol>
+            <p class="note">📝 Avoid rapid correction of glucose or sodium. Watch for cerebral edema.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 4 -->
+      <section class="acc-item" aria-expanded="false">
+        <button class="acc-trigger" aria-controls="p4" aria-expanded="false">
+          <span class="num">4.</span>
+          <span class="title">Anaphylaxis Management ⚠️</span>
+          <span class="chev">▾</span>
+        </button>
+        <div class="acc-panel" id="p4" role="region" aria-label="Anaphylaxis Management">
+          <div class="panel-inner">
+            <ol>
+              <li><strong>1. Immediate Epinephrine:</strong><br>
+                • IM Epinephrine 0.01 mg/kg (max 0.3–0.5 mg)<br>
+                • Repeat every 5–15 minutes as needed.
+              </li>
+              <li><strong>2. Airway &amp; Oxygen:</strong><br>
+                • High-flow O₂ if respiratory distress<br>
+                • Prepare for intubation if airway swelling.
+              </li>
+              <li><strong>3. Positioning:</strong><br>
+                • Lay flat with legs elevated unless respiratory compromise.
+              </li>
+              <li><strong>4. IV Access &amp; Fluids:</strong><br>
+                • NS bolus 20 ml/kg for hypotension.
+              </li>
+              <li><strong>5. Adjunct Medications:</strong><br>
+                • Antihistamines: Diphenhydramine 1 mg/kg IV/IM<br>
+                • Steroids: Methylprednisolone 1–2 mg/kg IV
+              </li>
+              <li><strong>6. Bronchodilators:</strong> • Albuterol for bronchospasm.</li>
+              <li><strong>7. Observe:</strong> • Monitor for biphasic reaction (up to 6 hrs).</li>
+              <li><strong>8. Discharge Plan:</strong><br>
+                • Prescribe epinephrine auto-injector<br>
+                • Educate on allergen avoidance.
+              </li>
+            </ol>
+            <p class="note">📝 Epinephrine is the first-line treatment. Do not delay.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 5 -->
+      <section class="acc-item" aria-expanded="false">
+        <button class="acc-trigger" aria-controls="p5" aria-expanded="false">
+          <span class="num">5.</span>
+          <span class="title">Asthma Exacerbation 🫁</span>
+          <span class="chev">▾</span>
+        </button>
+        <div class="acc-panel" id="p5" role="region" aria-label="Asthma Exacerbation">
+          <div class="panel-inner">
+            <ol>
+              <li><strong>1. Assess Severity:</strong> RR, accessory muscle use, SpO₂, mental status.</li>
+              <li><strong>2. Oxygen:</strong> • Administer to maintain SpO₂ &gt; 92%.</li>
+              <li><strong>3. SABA (Albuterol):</strong> • 2.5 mg nebulized every 20 min for 3 doses, then as needed.</li>
+              <li><strong>4. Ipratropium Bromide:</strong> • 250 mcg with first 3 SABA doses in moderate–severe cases.</li>
+              <li><strong>5. Steroids:</strong><br>
+                • Oral prednisolone 1–2 mg/kg (max 60 mg)<br>
+                • Or IV methylprednisolone 1 mg/kg.
+              </li>
+              <li><strong>6. Reassess:</strong><br>
+                • Improvement = continue treatment<br>
+                • No improvement = consider IV MgSO₄, ICU admission.
+              </li>
+              <li><strong>7. Disposition:</strong> • Discharge if stable for 1 hr post-treatment with good oxygenation.</li>
+            </ol>
+            <p class="note">📝 Early steroids reduce need for admission. Monitor closely.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 6 -->
+      <section class="acc-item" aria-expanded="false">
+        <button class="acc-trigger" aria-controls="p6" aria-expanded="false">
+          <span class="num">6.</span>
+          <span class="title">Bronchiolitis 👶</span>
+          <span class="chev">▾</span>
+        </button>
+        <div class="acc-panel" id="p6" role="region" aria-label="Bronchiolitis">
+          <div class="panel-inner">
+            <ol>
+              <li><strong>1. Diagnosis:</strong> Clinical; viral prodrome + respiratory distress in infants.</li>
+              <li><strong>2. Supportive Care:</strong> • Suctioning, hydration, oxygen if SpO₂ &lt; 90%.</li>
+              <li><strong>3. Avoid:</strong> • No antibiotics, bronchodilators, or steroids routinely.</li>
+              <li><strong>4. Monitor:</strong> • Respiratory effort, hydration status.</li>
+              <li><strong>5. Admission Criteria:</strong> • Apnea, hypoxia, poor feeding, &lt;2 months age, comorbidities.</li>
+            </ol>
+            <p class="note">📝 RSV is the most common cause. Treatment is supportive.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 7 -->
+      <section class="acc-item" aria-expanded="false">
+        <button class="acc-trigger" aria-controls="p7" aria-expanded="false">
+          <span class="num">7.</span>
+          <span class="title">Neonatal Sepsis 👶🦠</span>
+          <span class="chev">▾</span>
+        </button>
+        <div class="acc-panel" id="p7" role="region" aria-label="Neonatal Sepsis">
+          <div class="panel-inner">
+            <ol>
+              <li><strong>1. Identify Risk Factors:</strong> • Maternal fever, prolonged ROM, prematurity, chorioamnionitis.</li>
+              <li><strong>2. Clinical Signs:</strong> • Poor feeding, lethargy, temp instability, respiratory distress, apnea, irritability.</li>
+              <li><strong>3. Initial Workup:</strong> • CBC, CRP, blood culture, glucose<br> • LP, urine culture (if stable and suspected).</li>
+              <li><strong>4. Empiric Antibiotics:</strong><br>
+                <strong>Early-onset (≤72h):</strong> Ampicillin + Gentamicin<br>
+                <strong>Late-onset (&gt;72h):</strong> Vancomycin + Cefotaxime
+              </li>
+              <li><strong>5. Supportive Care:</strong> • Fluids, oxygen, temperature regulation, glucose control.</li>
+              <li><strong>6. Monitor:</strong> • Clinical signs, vitals, labs.</li>
+              <li><strong>7. Duration:</strong> • Adjust antibiotics based on culture. Typically 7–14 days.</li>
+            </ol>
+            <p class="note">📝 Always consider sepsis in any unwell neonate. Start antibiotics early.</p>
+          </div>
+        </div>
+      </section>
     </div>
-    
-    <button class="accordion">3. DKA Management 💉</button>
-    <div class="panel">
-      <ol>
-<li>
-<strong>
-       1. Initial Assessment:
-      </strong>
-      ABCs, vital signs, mental status, weight, hydration level.
-     </li>
-<li>
-<strong>
-       2. Labs:
-      </strong>
-      Blood glucose, electrolytes, BUN/Cr, ABG/VBG, urine ketones, β-hydroxybutyrate.
-     </li>
-<li>
-<strong>
-       3. Fluid Replacement:
-      </strong>
-      • Start with 10-20 ml/kg NS bolus over 1-2 hours (if in shock).
-      <br/>
-      • Then maintenance + deficit correction over 48 hrs.
-     </li>
-<li>
-<strong>
-       4. Insulin Therapy:
-      </strong>
-      • Start 1–2 hrs after fluids.
-      <br/>
-      • Regular insulin 0.05–0.1 units/kg/hr IV infusion.
-     </li>
-<li>
-<strong>
-       5. Potassium Replacement:
-      </strong>
-      • Add K⁺ when urine output established and K⁺ &lt;5.5 mmol/L.
-      <br/>
-      • Typical: 20–40 mEq/L KCl or KPhos.
-     </li>
-<li>
-<strong>
-       6. Monitor:
-      </strong>
-      Glucose, pH, K⁺, Na⁺, anion gap every 1–2 hrs.
-     </li>
-<li>
-<strong>
-       7. Transition:
-      </strong>
-      Switch to SC insulin when patient eating, gap closed, pH normalized.
-     </li>
-</ol>
-      <p class="note">
-     📝 Avoid rapid correction of glucose or sodium. Watch for cerebral edema.
-    </p>
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="container">
+      <small>© <span id="year"></span> Emergency Algorithms • UI polish only (no medical advice)</small>
     </div>
-    
-    <button class="accordion">4. Anaphylaxis Management ⚠️</button>
-    <div class="panel">
-      <ol>
-<li>
-<strong>
-       1. Immediate Epinephrine:
-      </strong>
-      • IM Epinephrine 0.01 mg/kg (max 0.3–0.5 mg)
-      <br/>
-      • Repeat every 5–15 minutes as needed.
-     </li>
-<li>
-<strong>
-       2. Airway &amp; Oxygen:
-      </strong>
-      • High-flow O₂ if respiratory distress
-      <br/>
-      • Prepare for intubation if airway swelling.
-     </li>
-<li>
-<strong>
-       3. Positioning:
-      </strong>
-      • Lay flat with legs elevated unless respiratory compromise.
-     </li>
-<li>
-<strong>
-       4. IV Access &amp; Fluids:
-      </strong>
-      • NS bolus 20 ml/kg for hypotension.
-     </li>
-<li>
-<strong>
-       5. Adjunct Medications:
-      </strong>
-      • Antihistamines: Diphenhydramine 1 mg/kg IV/IM
-      <br/>
-      • Steroids: Methylprednisolone 1–2 mg/kg IV
-     </li>
-<li>
-<strong>
-       6. Bronchodilators:
-      </strong>
-      • Albuterol for bronchospasm.
-     </li>
-<li>
-<strong>
-       7. Observe:
-      </strong>
-      • Monitor for biphasic reaction (up to 6 hrs).
-     </li>
-<li>
-<strong>
-       8. Discharge Plan:
-      </strong>
-      • Prescribe epinephrine auto-injector
-      <br/>
-      • Educate on allergen avoidance.
-     </li>
-</ol>
-      <p class="note">
-     📝 Epinephrine is the first-line treatment. Do not delay.
-    </p>
-    </div>
-    
-    <button class="accordion">5. Asthma Exacerbation 🫁</button>
-    <div class="panel">
-      <ol>
-<li>
-<strong>
-       1. Assess Severity:
-      </strong>
-      RR, accessory muscle use, SpO₂, mental status.
-     </li>
-<li>
-<strong>
-       2. Oxygen:
-      </strong>
-      • Administer to maintain SpO₂ &gt; 92%.
-     </li>
-<li>
-<strong>
-       3. SABA (Albuterol):
-      </strong>
-      • 2.5 mg nebulized every 20 min for 3 doses, then as needed.
-     </li>
-<li>
-<strong>
-       4. Ipratropium Bromide:
-      </strong>
-      • 250 mcg with first 3 SABA doses in moderate–severe cases.
-     </li>
-<li>
-<strong>
-       5. Steroids:
-      </strong>
-      • Oral prednisolone 1–2 mg/kg (max 60 mg)
-      <br/>
-      • Or IV methylprednisolone 1 mg/kg.
-     </li>
-<li>
-<strong>
-       6. Reassess:
-      </strong>
-      • Improvement = continue treatment
-      <br/>
-      • No improvement = consider IV MgSO₄, ICU admission.
-     </li>
-<li>
-<strong>
-       7. Disposition:
-      </strong>
-      • Discharge if stable for 1 hr post-treatment with good oxygenation.
-     </li>
-</ol>
-      <p class="note">
-     📝 Early steroids reduce need for admission. Monitor closely.
-    </p>
-    </div>
-    
-    <button class="accordion">6. Bronchiolitis 👶</button>
-    <div class="panel">
-      <ol>
-<li>
-<strong>
-       1. Diagnosis:
-      </strong>
-      Clinical; viral prodrome + respiratory distress in infants.
-     </li>
-<li>
-<strong>
-       2. Supportive Care:
-      </strong>
-      • Suctioning, hydration, oxygen if SpO₂ &lt; 90%.
-     </li>
-<li>
-<strong>
-       3. Avoid:
-      </strong>
-      • No antibiotics, bronchodilators, or steroids routinely.
-     </li>
-<li>
-<strong>
-       4. Monitor:
-      </strong>
-      • Respiratory effort, hydration status.
-     </li>
-<li>
-<strong>
-       5. Admission Criteria:
-      </strong>
-      • Apnea, hypoxia, poor feeding, &lt;2 months age, comorbidities.
-     </li>
-</ol>
-      <p class="note">
-     📝 RSV is the most common cause. Treatment is supportive.
-    </p>
-    </div>
-    
-    <button class="accordion">7. Neonatal Sepsis 👶🦠</button>
-    <div class="panel">
-      <ol>
-<li>
-<strong>
-       1. Identify Risk Factors:
-      </strong>
-      • Maternal fever, prolonged ROM, prematurity, chorioamnionitis.
-     </li>
-<li>
-<strong>
-       2. Clinical Signs:
-      </strong>
-      • Poor feeding, lethargy, temp instability, respiratory distress, apnea, irritability.
-     </li>
-<li>
-<strong>
-       3. Initial Workup:
-      </strong>
-      • CBC, CRP, blood culture, glucose
-      <br/>
-      • LP, urine culture (if stable and suspected).
-     </li>
-<li>
-<strong>
-       4. Empiric Antibiotics:
-      </strong>
-      •
-      <strong>
-       Early-onset (≤72h):
-      </strong>
-      Ampicillin + Gentamicin
-      <br/>
-      •
-      <strong>
-       Late-onset (&gt;72h):
-      </strong>
-      Vancomycin + Cefotaxime
-     </li>
-<li>
-<strong>
-       5. Supportive Care:
-      </strong>
-      • Fluids, oxygen, temperature regulation, glucose control.
-     </li>
-<li>
-<strong>
-       6. Monitor:
-      </strong>
-      • Clinical signs, vitals, labs.
-     </li>
-<li>
-<strong>
-       7. Duration:
-      </strong>
-      • Adjust antibiotics based on culture. Typically 7–14 days.
-     </li>
-</ol>
-      <p class="note">
-     📝 Always consider sepsis in any unwell neonate. Start antibiotics early.
-    </p>
-    </div>
-    
-  </div>
+  </footer>
+
+  <!-- JS: accessible accordion + small niceties -->
   <script>
-    var acc = document.getElementsByClassName("accordion");
-    for (var i = 0; i < acc.length; i++) {
-      acc[i].addEventListener("click", function() {
-        this.classList.toggle("active");
-        var panel = this.nextElementSibling;
-        if (panel.style.display === "block") {
-          panel.style.display = "none";
-        } else {
-          panel.style.display = "block";
+    // year
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // Accordion: keyboard + ARIA
+    const items = document.querySelectorAll('.acc-item');
+    const triggers = document.querySelectorAll('.acc-trigger');
+
+    function setExpanded(item, expanded){
+      item.setAttribute('aria-expanded', expanded ? 'true' : 'false');
+      const btn = item.querySelector('.acc-trigger');
+      const panel = item.querySelector('.acc-panel');
+      btn.setAttribute('aria-expanded', expanded ? 'true' : 'false');
+      // If you prefer "one open at a time", uncomment below:
+      // if (expanded) items.forEach(i => { if (i!==item) setExpanded(i,false); });
+    }
+
+    triggers.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const item = btn.closest('.acc-item');
+        const isOpen = item.getAttribute('aria-expanded') === 'true';
+        setExpanded(item, !isOpen);
+      });
+
+      // keyboard behavior: Enter/Space handled by click via "button" semantics
+      btn.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowDown' || e.key === 'ArrowUp'){
+          e.preventDefault();
+          const list = Array.from(triggers);
+          const idx = list.indexOf(btn);
+          const next = e.key === 'ArrowDown' ? (idx+1) % list.length : (idx-1+list.length)%list.length;
+          list[next].focus();
         }
       });
-    }
+    });
+
+    // Open first panel by default? Uncomment:
+    // setExpanded(items[0], true);
   </script>
-
-</body></body>
-
+</body>
 </html>
