@@ -3,23 +3,27 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Fast ED Note – Medical History (Options Only)</title>
+  <title>ER Note Builder – Fast & Detailed</title>
   <style>
     :root{
       --bg:#0f172a; --panel:#0b1224; --card:#111b33; --muted:#94a3b8; --text:#e5e7eb;
-      --brand:#22c55e; --border:#1f2a44; --chip:#1e293b; --chip-hover:#0f172a; --radius:14px;
-      --shadow: 0 8px 30px rgba(0,0,0,.25);
+      --brand:#22c55e; --accent:#06b6d4; --border:#1f2a44; --chip:#1e293b; --chip-hover:#0f172a;
+      --radius:14px; --shadow:0 8px 30px rgba(0,0,0,.25);
     }
     *{box-sizing:border-box}
-    body{margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;color:var(--text);
-      background: radial-gradient(1200px 700px at 85% -10%, #0a6 0%, transparent 55%) fixed,
-                  radial-gradient(900px 600px at -10% 110%, #09c 0%, transparent 50%) fixed,
-                  var(--bg);}
+    body{
+      margin:0; color:var(--text);
+      font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+      background:
+        radial-gradient(1200px 700px at 85% -10%, #0a6 0%, transparent 55%) fixed,
+        radial-gradient(900px 600px at -10% 110%, #09c 0%, transparent 50%) fixed,
+        var(--bg);
+    }
     header{padding:20px;display:flex;align-items:center;justify-content:space-between}
-    .brand{display:flex;gap:12px;align-items:center}
+    .brand{display:flex;align-items:center;gap:12px}
     .logo{width:42px;height:42px;border-radius:12px;background:conic-gradient(from 210deg at 70% 30%, #22c55e,#06b6d4);
       box-shadow:inset 0 0 0 2px rgba(255,255,255,.08),var(--shadow)}
-    h1{margin:0;font-size:1.15rem}
+    h1{margin:0;font-size:1.12rem}
     .muted{color:var(--muted);font-size:.92rem}
     .wrap{display:grid;grid-template-columns:1.6fr 1fr;gap:18px;padding:0 20px 24px}
     @media (max-width:1100px){.wrap{grid-template-columns:1fr}}
@@ -34,9 +38,10 @@
     .chip{display:inline-flex;align-items:center;gap:8px;padding:10px 12px;border-radius:12px;background:var(--chip);
       border:1px solid var(--border);cursor:pointer;transition:.2s}
     .chip:hover{background:var(--chip-hover)}
-    .chip input{accent-color:var(--brand);transform:scale(1.15)}
-    input[type="number"],select{width:100%;padding:12px;border-radius:10px;border:1px solid var(--border);
-      background:#0b1326;color:var(--text);outline:none}
+    .chip input{accent-color:var(--brand);transform:scale(1.12)}
+    input[type="number"],select{
+      width:100%;padding:12px;border-radius:10px;border:1px solid var(--border);background:#0b1326;color:var(--text);outline:none
+    }
     .kicker{color:#a7f3d0;font-weight:700}
     .stepper{display:flex;gap:8px;flex-wrap:wrap;margin:6px 0 12px}
     .step{padding:8px 10px;border-radius:999px;border:1px solid var(--border);background:#0b1224;color:var(--muted);
@@ -44,16 +49,23 @@
     .step.active{color:#10b981;border-color:#10b981}
     .divider{height:1px;background:linear-gradient(90deg,transparent,#1f2a44,transparent);margin:14px 0}
     .actions{display:flex;gap:10px;flex-wrap:wrap}
-    button{background:linear-gradient(180deg,rgba(255,255,255,.07),transparent),var(--card);color:var(--text);
-      border:1px solid var(--border);padding:12px 14px;border-radius:12px;cursor:pointer;transition:.2s;font-weight:600}
+    button{
+      background:linear-gradient(180deg,rgba(255,255,255,.07),transparent),var(--card);color:var(--text);
+      border:1px solid var(--border);padding:12px 14px;border-radius:12px;cursor:pointer;transition:.2s;font-weight:600
+    }
     button.primary{background:linear-gradient(180deg,rgba(255,255,255,.12),transparent),#14532d;border-color:#1d4ed8}
     button:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(0,0,0,.25)}
-    .note{white-space:pre-wrap;background:linear-gradient(180deg,rgba(255,255,255,.03),transparent),var(--card);
-      border:1px solid var(--border);border-radius:12px;padding:14px;min-height:320px;font-family:ui-monospace,Consolas,monospace}
+    .note{
+      white-space:pre-wrap;background:linear-gradient(180deg,rgba(255,255,255,.03),transparent),var(--card);
+      border:1px solid var(--border);border-radius:12px;padding:14px;min-height:320px;font-family:ui-monospace,Consolas,monospace
+    }
     .hidden{display:none !important}
     .warn{color:#fca5a5}
     .tag{display:inline-block;padding:2px 8px;border-radius:999px;font-size:.8rem;border:1px solid var(--border);
       background:#0e1a32;color:#93c5fd}
+    .mode-card{display:flex;gap:10px;flex-wrap:wrap}
+    .mode-card button{min-width:160px}
+    .pill{display:inline-block;padding:6px 10px;border-radius:999px;background:#0b1326;border:1px solid var(--border);color:#a5f3fc}
   </style>
 </head>
 <body>
@@ -61,16 +73,27 @@
     <div class="brand">
       <div class="logo" aria-hidden="true"></div>
       <div>
-        <h1>Fast ED Note – <span class="kicker">English terse style</span></h1>
-        <div class="muted">Age first → all inputs by options → note auto‑builds in your exact format.</div>
+        <h1>ER Note Builder – <span class="kicker">Fast or Detailed</span></h1>
+        <div class="muted">Age first → options only → precise English sentences. Always “Came to ER”.</div>
       </div>
     </div>
     <div><span class="tag">HTML+CSS+JS</span></div>
   </header>
 
   <div class="wrap">
+    <!-- LEFT -->
     <main class="panel">
       <div class="stepper" id="stepper"></div>
+
+      <!-- STEP 0: MODE -->
+      <section class="section" id="step-mode">
+        <h3>0) Choose mode</h3>
+        <div class="mode-card">
+          <button class="primary" data-mode="fast">Fast ER Note</button>
+          <button data-mode="detailed">Detailed Note</button>
+        </div>
+        <div class="muted" style="margin-top:8px">Current mode: <span id="modeLabel" class="pill">Fast ER Note</span></div>
+      </section>
 
       <!-- STEP 1: AGE -->
       <section class="section" id="step-age">
@@ -87,7 +110,7 @@
         <div id="ageWarn" class="muted warn hidden">Please enter age 0–120.</div>
       </section>
 
-      <!-- DYNAMIC SECTIONS -->
+      <!-- STEP 2+: dynamic -->
       <div id="dynamicSections" class="hidden"></div>
 
       <div class="divider"></div>
@@ -99,203 +122,319 @@
       </div>
     </main>
 
+    <!-- RIGHT -->
     <aside class="panel note-panel">
       <h3>Auto‑Generated Note</h3>
-      <div id="noteBox" class="note">Enter age to start…</div>
+      <div id="noteBox" class="note">Choose mode and enter age to start…</div>
     </aside>
   </div>
 
   <script>
-    // ---- State ----
-    const state = { age:null, answers:{} };
-    const $ = (s,el=document)=>el.querySelector(s);
-    const $$ = (s,el=document)=>[...el.querySelectorAll(s)];
+    // ====== Helpers & State ======
+    const state = { mode: 'fast', age: null, answers: {} };
+    const $ = (s, el=document)=>el.querySelector(s);
+    const $$ = (s, el=document)=>[...el.querySelectorAll(s)];
     const byId = id=>document.getElementById(id);
+    const stepper = byId('stepper');
+    const root = byId('dynamicSections');
 
-    // ---- Schema (English, terse ED style) ----
-    const SCHEMA = [
-      {
-        id:"demographics",
-        title:"2) Demographics & PMH",
-        questions:[
-          {
-            key:"gender", label:"Sex", type:"radio",
-            options:["male","female","unspecified"], default:"male"
-          },
-          {
-            key:"pmh", label:"Past medical history", type:"radio",
-            options:["Medical free","Known conditions"], default:"Medical free"
-          },
-          {
-            key:"pmh_known", label:"If 'Known conditions'", type:"checkbox",
-            options:["DM","HTN","Asthma","Cardiac","Renal","Thyroid","Dyslipidemia","Psych"], showIf:(a)=>a.pmh==="Known conditions"
-          }
-        ],
-        summarize(a){
-          const g = a.gender||"unspecified";
-          if(a.pmh==="Known conditions"){
-            const list = (a.pmh_known||[]).join(" ");
-            return `${state.age ?? "?"} y/o ${g} ${list||"with PMH"}`;
-          }
-          return `${state.age ?? "?"} y/o ${g} Medical free`;
+    const CONDITIONS = {
+      "Diabetes mellitus":"diabetes mellitus",
+      "Hypertension":"hypertension",
+      "Bronchial asthma":"bronchial asthma",
+      "Ischemic heart disease":"ischemic heart disease",
+      "Chronic kidney disease":"chronic kidney disease",
+      "Hypothyroidism":"hypothyroidism",
+      "Hyperthyroidism":"hyperthyroidism",
+      "Dyslipidemia":"dyslipidemia",
+      "Epilepsy":"epilepsy",
+      "GERD":"gastroesophageal reflux disease"
+    };
+
+    const SURGERIES = [
+      "Appendectomy","Cholecystectomy","Cesarean section","Hernia repair","Cardiac surgery"
+    ];
+
+    const MEDS = [
+      "Antihypertensives","Oral hypoglycemics","Insulin","Inhalers (as needed)","Anticoagulants","Regular analgesics","Antidepressants","Supplements"
+    ];
+
+    const ALLERGENS = ["Penicillin","NSAIDs","Food","Latex"];
+
+    // English list joiner: ["A","B","C"] -> "A, B and C"
+    function englishList(arr){
+      const list = arr.filter(Boolean);
+      if(list.length===0) return "";
+      if(list.length===1) return list[0];
+      if(list.length===2) return list[0] + " and " + list[1];
+      return list.slice(0,-1).join(", ") + " and " + list[list.length-1];
+    }
+
+    function resetAnswers(){ state.answers = {}; }
+
+    // ====== Schemas ======
+    // Common fragments reused in fast & detailed
+    const COMMON_DEMOGRAPHICS = {
+      id:"demographics",
+      title:"2) Demographics & PMH",
+      questions:[
+        { key:"gender", label:"Sex", type:"radio", options:["male","female","unspecified"], default:"male" },
+        { key:"pmh_mode", label:"Past medical history", type:"radio", options:["Medical free","Known conditions"], default:"Medical free" },
+        { key:"pmh_known", label:"Select known conditions", type:"checkbox", options:Object.keys(CONDITIONS), showIf:a=>a.pmh_mode==="Known conditions" }
+      ],
+      summarize(a){
+        const g = a.gender || "unspecified";
+        const ageStr = (state.age ?? "?") + " y/o " + g + ".";
+        if(a.pmh_mode==="Known conditions"){
+          const list = (a.pmh_known||[]).map(k=>CONDITIONS[k]);
+          return `${ageStr} Known case of ${englishList(list)}.`;
         }
-      },
+        return `${ageStr} Medical free.`;
+      }
+    };
+
+    const FAST_SCHEMA = [
+      COMMON_DEMOGRAPHICS,
       {
-        id:"visit",
-        title:"3) Visit context & CC",
+        id:"presenting",
+        title:"3) CC & HPI (fast)",
         questions:[
-          {
-            key:"location", label:"Came to", type:"radio",
-            options:["AR","ER","OPD"], default:"AR"
-          },
-          {
-            key:"cc", label:"Complaining of", type:"checkbox",
-            options:["cough","fever","runny nose","sore throat","vomiting","diarrhea","abdominal pain","headache","dyspnea","palpitation","other"]
-          },
-          {
-            key:"duration", label:"Duration", type:"radio",
-            options:["for one day","for two days","for three days","for 1 week","for 2 weeks","for 1 month","since today"],
-            default:"for three days"
-          },
-          {
-            key:"assoc_none", label:"Associated symptoms", type:"radio",
-            options:["No other associated symptoms","Has associated symptoms"], default:"No other associated symptoms"
-          },
-          {
-            key:"assoc_list", label:"If 'Has associated symptoms'", type:"checkbox",
-            options:["sore throat","vomiting","diarrhea","headache","rash","chills","myalgia","other"],
-            showIf:(a)=>a.assoc_none==="Has associated symptoms"
-          }
+          { key:"cc", label:"Complaining of", type:"checkbox", options:["cough","fever","runny nose","sore throat","vomiting","diarrhea","abdominal pain","headache","dyspnea","palpitation"] },
+          { key:"duration", label:"Duration", type:"radio", options:["for one day","for two days","for three days","for 1 week","for 2 weeks","for 1 month","since today"], default:"for three days" },
+          { key:"assoc_mode", label:"Associated symptoms", type:"radio", options:["No other associated symptoms","Has associated symptoms"], default:"No other associated symptoms" },
+          { key:"assoc", label:"If associated", type:"checkbox", options:["sore throat","vomiting","diarrhea","headache","rash","chills","myalgia"], showIf:a=>a.assoc_mode==="Has associated symptoms" }
         ],
         summarize(a){
-          const loc = a.location||"AR";
-          const ccArr = (a.cc||[]).filter(x=>x!=="other");
-          const ccOther = (a.cc||[]).includes("other") ? (a.cc_other||"other") : "";
-          const ccText = [ccArr.join(" "), ccOther].filter(Boolean).join(" ");
+          const cc = englishList(a.cc||[]);
           const dur = a.duration || "";
-          let assoc = a.assoc_none || "No other associated symptoms";
-          if(assoc==="Has associated symptoms"){
-            const list = (a.assoc_list||[]).filter(x=>x!=="other");
-            const oth = (a.assoc_list||[]).includes("other") ? (a.assoc_list_other||"other") : "";
-            assoc = `Associated with ${[list.join(" "),oth].filter(Boolean).join(" ")}`;
+          const line1 = `Came to ER, complaining of ${cc||"—"} ${dur}.`.replace(/\s+\./g,'.');
+          let line2 = "No other associated symptoms.";
+          if(a.assoc_mode==="Has associated symptoms"){
+            line2 = `Associated with ${englishList(a.assoc||[])}.`;
           }
-          return `Came to ${loc}, complaining of ${ccText||"—"}
-${capitalizeFirst(dur)}
-${assoc}`;
+          return `${line1}\n${line2}`;
         }
       },
       {
-        id:"exam",
-        title:"4) Examination (preset phrases)",
+        id:"exam_fast",
+        title:"4) Examination (fast)",
         questions:[
-          {
-            key:"gen_look", label:"General appearance", type:"checkbox",
-            options:["patient looks well","conscious","alert","not in distress","febrile","toxic"], defaultChecked:["patient looks well","conscious","alert","not in distress"]
-          },
-          {
-            key:"chest", label:"Chest", type:"radio",
-            options:["just equal bilateral air entry","wheezes","crackles","reduced air entry one side"],
-            default:"just equal bilateral air entry"
-          },
-          {
-            key:"abd", label:"Abdomen", type:"radio",
-            options:["abdomen soft lax","tender RUQ","tender RLQ","generalized tenderness","guarding"], default:"abdomen soft lax"
-          },
-          {
-            key:"others", label:"Other systems", type:"radio",
-            options:["other examinations are unremarkable","neuro focal deficit","dehydrated","skin rash"], default:"other examinations are unremarkable"
-          }
+          { key:"gen", label:"General appearance", type:"checkbox",
+            options:["patient looks well","conscious","alert","not in distress","febrile","toxic"],
+            defaultChecked:["patient looks well","conscious","alert","not in distress"] },
+          { key:"chest", label:"Chest", type:"radio",
+            options:["equal bilateral air entry","wheezes","crackles","reduced air entry one side"], default:"equal bilateral air entry" },
+          { key:"abd", label:"Abdomen", type:"radio",
+            options:["soft, lax","tender RUQ","tender RLQ","generalized tenderness","guarding"], default:"soft, lax" },
+          { key:"others", label:"Other systems", type:"radio",
+            options:["unremarkable","neuro focal deficit","dehydrated","skin rash"], default:"unremarkable" }
         ],
         summarize(a){
-          const gen = (a.gen_Look_final || defaultGen()).join(" ");
-          const chest = a.chest || "just equal bilateral air entry";
-          const abd = a.abd || "abdomen soft lax";
-          const oth = a.others || "other examinations are unremarkable";
-          return `On examination, ${gen} ${chest} ${abd}, ${oth}`;
+          const gen = englishList(a.gen || ["patient looks well","conscious","alert","not in distress"]);
+          const chest = a.chest || "equal bilateral air entry";
+          const abd = a.abd || "soft, lax";
+          const oth = a.others || "unremarkable";
+          return `On examination, ${gen}. Chest: ${chest}. Abdomen: ${abd}. Other systems: ${oth}.`;
         }
       }
     ];
 
-    // ---- Build UI ----
-    const root = byId('dynamicSections');
-    const stepper = byId('stepper');
+    const DETAILED_SCHEMA = [
+      COMMON_DEMOGRAPHICS,
+      {
+        id:"presenting_d",
+        title:"3) CC & HPI (detailed)",
+        questions:[
+          { key:"location", label:"Visit location", type:"radio", options:["ER"], default:"ER" },
+          { key:"cc", label:"Complaining of", type:"checkbox", options:["cough","fever","runny nose","sore throat","vomiting","diarrhea","abdominal pain","headache","dyspnea","palpitation","chest pain","dizziness"] },
+          { key:"duration", label:"Duration", type:"radio", options:["for one day","for two days","for three days","for 1 week","for 2 weeks","for 1 month","since today"], default:"for three days" },
+          { key:"assoc_mode", label:"Associated symptoms", type:"radio", options:["No other associated symptoms","Has associated symptoms"], default:"No other associated symptoms" },
+          { key:"assoc", label:"If associated", type:"checkbox", options:["sore throat","vomiting","diarrhea","headache","rash","chills","myalgia","photophobia","dysuria","back pain"], showIf:a=>a.assoc_mode==="Has associated symptoms" }
+        ],
+        summarize(a){
+          const cc = englishList(a.cc||[]);
+          const dur = a.duration || "";
+          const line1 = `Came to ER, complaining of ${cc||"—"} ${dur}.`.replace(/\s+\./g,'.');
+          let line2 = "No other associated symptoms.";
+          if(a.assoc_mode==="Has associated symptoms"){ line2 = `Associated with ${englishList(a.assoc||[])}.`; }
+          return `${line1}\n${line2}`;
+        }
+      },
+      {
+        id:"meds",
+        title:"4) Medications",
+        questions:[
+          { key:"med_mode", label:"Regular medications", type:"radio", options:["No regular medications","On regular medications"], default:"No regular medications" },
+          { key:"meds", label:"Select meds", type:"checkbox", options:MEDS, showIf:a=>a.med_mode==="On regular medications" },
+          { key:"adh", label:"Adherence", type:"radio", options:["good","average","poor","not assessed"], default:"not assessed" }
+        ],
+        summarize(a){
+          const base = a.med_mode==="On regular medications" ? `On regular medications: ${englishList(a.meds||[])}.` : "No regular medications.";
+          const adh = `Adherence: ${a.adh || "not assessed"}.`;
+          return `${base} ${adh}`;
+        }
+      },
+      {
+        id:"allergies",
+        title:"5) Allergies",
+        questions:[
+          { key:"allergy_mode", label:"Allergies", type:"radio", options:["No known drug allergies","Has allergies"], default:"No known drug allergies" },
+          { key:"allergy_items", label:"Select allergens", type:"checkbox", options:ALLERGENS, showIf:a=>a.allergy_mode==="Has allergies" },
+          { key:"allergy_rxn", label:"Reaction type", type:"radio", options:["rash","angioedema","anaphylaxis","unspecified"], default:"unspecified", showIf:a=>a.allergy_mode==="Has allergies" }
+        ],
+        summarize(a){
+          if(a.allergy_mode==="Has allergies"){
+            const list = englishList(a.allergy_items||[]);
+            const rxn = a.allergy_rxn || "unspecified";
+            return `Allergic to ${list} (${rxn}).`;
+          }
+          return "No known drug allergies.";
+        }
+      },
+      {
+        id:"psh",
+        title:"6) Past Surgical History",
+        questions:[ { key:"psh_mode", label:"PSH", type:"radio", options:["No past surgical history","Has surgeries"], default:"No past surgical history" },
+                    { key:"psh", label:"Select surgeries", type:"checkbox", options:SURGERIES, showIf:a=>a.psh_mode==="Has surgeries" } ],
+        summarize(a){
+          if(a.psh_mode==="Has surgeries"){ return `Past surgical history: ${englishList(a.psh||[])}.`; }
+          return "No past surgical history.";
+        }
+      },
+      {
+        id:"fhx",
+        title:"7) Family History",
+        questions:[
+          { key:"fhx_mode", label:"Family history", type:"radio", options:["Not significant","Positive"], default:"Not significant" },
+          { key:"fhx", label:"If positive", type:"checkbox", options:["diabetes","hypertension","early heart disease","cancers","genetic disorders"], showIf:a=>a.fhx_mode==="Positive" }
+        ],
+        summarize(a){
+          if(a.fhx_mode==="Positive"){ return `Family history: ${englishList(a.fhx||[])}.`; }
+          return "Family history not significant.";
+        }
+      },
+      {
+        id:"shx",
+        title:"8) Social History",
+        questions:[
+          { key:"smoke", label:"Smoking", type:"radio", options:["non-smoker","current smoker","former smoker"], default:"non-smoker" },
+          { key:"social_func", label:"Function", type:"radio", options:["socially independent","needs assistance"], default:"socially independent" }
+        ],
+        summarize(a){ return `${capitalize(a.smoke||"non-smoker")}. ${capitalize(a.social_func||"socially independent")}.`; }
+      },
+      {
+        id:"ros",
+        title:"9) Review of Systems (ROS)",
+        questions:[
+          { key:"ros_general", label:"General", type:"checkbox", options:["no complaints","fever","night sweats","weight loss","fatigue"] },
+          { key:"ros_cardio", label:"Cardio", type:"checkbox", options:["no complaints","chest pain","palpitation","leg swelling","syncope"] },
+          { key:"ros_resp", label:"Resp", type:"checkbox", options:["no complaints","cough","dyspnea","wheeze","sputum"] },
+          { key:"ros_gi", label:"GI", type:"checkbox", options:["no complaints","abdominal pain","nausea/vomiting","diarrhea","constipation","heartburn"] },
+          { key:"ros_neuro", label:"Neuro", type:"checkbox", options:["no complaints","headache","dizziness","weakness/numbness","seizures"] }
+        ],
+        summarize(a){
+          // Collate positives across groups
+          const groups = ["ros_general","ros_cardio","ros_resp","ros_gi","ros_neuro"];
+          const positives = [];
+          groups.forEach(k=>{
+            const v = (a[k]||[]);
+            const hasNo = v.includes("no complaints");
+            const pos = v.filter(x=>x!=="no complaints");
+            positives.push(...pos);
+          });
+          if(positives.length===0){ return "ROS: unremarkable."; }
+          return `ROS: positive for ${englishList(positives)}; otherwise unremarkable.`;
+        }
+      },
+      {
+        id:"exam_d",
+        title:"10) Examination (detailed presets)",
+        questions:[
+          { key:"gen", label:"General appearance", type:"checkbox",
+            options:["patient looks well","conscious","alert","not in distress","febrile","pale","toxic"],
+            defaultChecked:["patient looks well","conscious","alert","not in distress"] },
+          { key:"vitals", label:"Vitals impression", type:"radio",
+            options:["stable","tachycardic","febrile","hypotensive","not recorded"], default:"stable" },
+          { key:"chest", label:"Chest", type:"radio",
+            options:["equal bilateral air entry","wheezes","crackles","reduced air entry one side"], default:"equal bilateral air entry" },
+          { key:"abd", label:"Abdomen", type:"radio",
+            options:["soft, lax","RUQ tenderness","RLQ tenderness","generalized tenderness","guarding"], default:"soft, lax" },
+          { key:"neuro", label:"Neuro", type:"radio",
+            options:["alert, oriented","GCS 15","focal deficit","no focal deficit"], default:"alert, oriented" },
+          { key:"others", label:"Other systems", type:"radio",
+            options:["unremarkable","dehydrated","skin rash","pedal edema"], default:"unremarkable" }
+        ],
+        summarize(a){
+          const gen = englishList(a.gen || ["patient looks well","conscious","alert","not in distress"]);
+          const vit = a.vitals || "stable";
+          const chest = a.chest || "equal bilateral air entry";
+          const abd = a.abd || "soft, lax";
+          const neuro = a.neuro || "alert, oriented";
+          const oth = a.others || "unremarkable";
+          return `On examination, ${gen}. Vitals: ${vit}. Chest: ${chest}. Abdomen: ${abd}. Neuro: ${neuro}. Other systems: ${oth}.`;
+        }
+      }
+    ];
 
+    // ====== UI Builder ======
     function buildStepper(){
-      stepper.innerHTML = '';
+      stepper.innerHTML='';
       const steps = [
+        {id:'step-mode', label:'Mode'},
         {id:'step-age', label:'Age'},
-        ...SCHEMA.map(s=>({id:s.id, label:s.title.replace(/^\d+\)\s*/,'')}))
       ];
+      // dynamic sections will add later
       steps.forEach((st,i)=>{
-        const b=document.createElement('div');
-        b.className='step'+(i===0?' active':'');
-        b.dataset.target=st.id;
-        b.textContent=`${i+1}. ${st.label}`;
-        stepper.appendChild(b);
+        const el=document.createElement('div');
+        el.className='step'+(i===0?' active':'');
+        el.dataset.target=st.id; el.textContent=`${i}. ${st.label}`;
+        stepper.appendChild(el);
       });
     }
 
     function buildSections(){
       root.innerHTML='';
-      SCHEMA.forEach(section=>{
-        const sec=document.createElement('section'); sec.className='section'; sec.id=section.id;
-        const h=document.createElement('h3'); h.textContent=section.title; sec.appendChild(h);
+      const schema = state.mode==='fast'? FAST_SCHEMA : DETAILED_SCHEMA;
+      schema.forEach(section=>{
+        const sec = document.createElement('section'); sec.className='section'; sec.id=section.id;
+        const h = document.createElement('h3'); h.textContent = section.title; sec.appendChild(h);
 
         section.questions.forEach(q=>{
-          const block=document.createElement('div'); block.className='row';
-
-          // label
-          const label=document.createElement('div');
-          label.innerHTML=`<div class="muted" style="margin-bottom:8px">${q.label}</div>`;
+          const block = document.createElement('div'); block.className='row';
+          const label = document.createElement('div'); label.innerHTML=`<div class="muted" style="margin-bottom:8px">${q.label}</div>`;
           block.appendChild(label);
 
-          const group=document.createElement('div'); group.className='row'; group.dataset.group=q.key;
+          const group = document.createElement('div'); group.className='row'; group.dataset.group=q.key;
 
           if(q.type==='radio' || q.type==='checkbox'){
             q.options.forEach(opt=>{
-              const id=`${section.id}-${q.key}-${opt.replace(/\s+/g,'-')}`;
-              const wrap=document.createElement('label'); wrap.className='chip';
-              const input=document.createElement('input'); input.type=q.type; input.value=opt; input.id=id;
-              if(q.type==='radio'){ input.name=q.key; }
-              else { input.name=q.key+'[]'; }
+              const id = `${section.id}-${q.key}-${opt.replace(/\W+/g,'-')}`;
+              const wrap = document.createElement('label'); wrap.className='chip';
+              const input = document.createElement('input'); input.type=q.type; input.value=opt; input.id=id;
+              input.name = q.type==='radio' ? q.key : q.key+'[]';
 
-              // defaults for checkbox general appearance
-              if(q.defaultChecked && q.defaultChecked.includes(opt)){ input.checked=true; }
+              // defaults
+              if(q.default && q.type==='radio' && opt===q.default) input.checked = true;
+              if(q.defaultChecked && q.type==='checkbox' && q.defaultChecked.includes(opt)) input.checked = true;
 
               input.addEventListener('change', ()=>{
-                if(q.type==='radio'){ state.answers[q.key]=opt; }
+                if(q.type==='radio'){ state.answers[q.key] = opt; }
                 else{
-                  const arr=[...group.querySelectorAll('input[type=checkbox]')].filter(c=>c.checked).map(c=>c.value);
-                  state.answers[q.key]=arr;
+                  const arr = [...group.querySelectorAll('input[type=checkbox]')].filter(c=>c.checked).map(c=>c.value);
+                  state.answers[q.key] = arr;
                 }
                 handleShowIf();
                 renderNote();
               });
+
               wrap.appendChild(input);
               const span=document.createElement('span'); span.textContent=opt; wrap.appendChild(span);
               group.appendChild(wrap);
             });
-
-            // support "other" free text if option "other" exists
-            if(q.options.includes("other") || q.options.includes("Other")){
-              const otherWrap=document.createElement('div'); otherWrap.className='grid-two hidden'; otherWrap.id=`${section.id}-${q.key}-other-wrap`;
-              otherWrap.innerHTML=`<div class="muted">Specify other:</div>
-                                   <input type="text" id="${section.id}-${q.key}-other" placeholder="Type a short phrase…">`;
-              block.appendChild(otherWrap);
-              block.addEventListener('change', ()=>{
-                const sel = (q.type==='radio') ? state.answers[q.key] : (state.answers[q.key]||[]);
-                const hasOther = (q.type==='radio') ? sel==="other" : sel.includes("other");
-                otherWrap.classList.toggle('hidden', !hasOther);
-              });
-              block.addEventListener('input', (e)=>{
-                const f=byId(`${section.id}-${q.key}-other`);
-                if(e.target===f){ state.answers[`${q.key}_other`]=f.value.trim(); renderNote(); }
-              });
-            }
-
           } else if(q.type==='select'){
-            const sel=document.createElement('select'); sel.id=`${section.id}-${q.key}`;
+            const sel = document.createElement('select'); sel.id=`${section.id}-${q.key}`;
             q.options.forEach(opt=>{ const o=document.createElement('option'); o.value=opt; o.textContent=opt; sel.appendChild(o); });
+            if(q.default) sel.value = q.default;
             sel.addEventListener('change', ()=>{ state.answers[q.key]=sel.value; handleShowIf(); renderNote(); });
             group.appendChild(sel);
           }
@@ -305,97 +444,121 @@ ${assoc}`;
         });
 
         root.appendChild(sec);
+
+        // init defaults into state
+        section.questions.forEach(q=>{
+          if(q.type==='radio' && q.default && state.answers[q.key]==null){ state.answers[q.key]=q.default; }
+          if(q.type==='checkbox' && q.defaultChecked && state.answers[q.key]==null){ state.answers[q.key]=q.defaultChecked.slice(); }
+        });
       });
+
+      // update stepper items for dynamic sections
+      // remove prior dynamic markers
+      $$('.step.dynamic', stepper).forEach(s=>s.remove());
+      (state.mode==='fast'? FAST_SCHEMA : DETAILED_SCHEMA).forEach((s, idx)=>{
+        const el=document.createElement('div');
+        el.className='step dynamic active';
+        el.dataset.target=s.id;
+        el.textContent = `${idx+2}. ${s.title.replace(/^\d+\)\s*/,'')}`;
+        stepper.appendChild(el);
+      });
+
       handleShowIf(true);
     }
 
     function handleShowIf(initial=false){
-      SCHEMA.forEach(section=>{
+      const schema = state.mode==='fast'? FAST_SCHEMA : DETAILED_SCHEMA;
+      schema.forEach(section=>{
         section.questions.forEach(q=>{
           if(q.showIf){
-            const show=!!q.showIf(state.answers);
-            const block=[...byId(section.id).querySelectorAll('[data-group]')].find(g=>g.dataset.group===q.key)?.closest('.row');
-            if(block){ block.classList.toggle('hidden', !show); }
+            const show = !!q.showIf(state.answers);
+            const block = [...byId(section.id).querySelectorAll('[data-group]')].find(g=>g.dataset.group===q.key)?.closest('.row');
+            if(block) block.classList.toggle('hidden', !show);
           }
         });
       });
-
-      // keep array for general appearance
-      state.answers.gen_Look_final = (state.answers.gen_look || defaultGen());
       if(initial) renderNote();
     }
 
-    function defaultGen(){ return ["patient looks well","conscious","alert","not in distress"]; }
-
-    // ---- Note rendering (exact style) ----
+    // ====== Note Rendering ======
     function renderNote(){
+      const schema = state.mode==='fast'? FAST_SCHEMA : DETAILED_SCHEMA;
       const lines = [];
+      // demographics always first (index 0 in both schemas)
+      lines.push(schema[0].summarize(state.answers));
+      for(let i=1;i<schema.length;i++){
+        const s = schema[i].summarize(state.answers);
+        if(s) lines.push(s);
+      }
+      byId('noteBox').textContent = lines.join('\n');
 
-      // Demographics line (from summarize)
-      lines.push(findSection("demographics"));
-
-      // Visit + CC + Duration + Associated
-      const visitSummary = findSection("visit");
-      lines.push(visitSummary);
-
-      // Examination
-      lines.push(findSection("exam"));
-
-      byId('noteBox').textContent = lines.filter(Boolean).join('\n');
-      // Stepper active
+      // stepper active flags
       $$('.step', stepper).forEach(st=>{
-        const target=st.dataset.target;
-        const active = target==='step-age' ? !!state.age : !!byId(target);
+        const t = st.dataset.target;
+        const active = t==='step-mode' ? true : (t==='step-age' ? !!state.age : !!byId(t));
         st.classList.toggle('active', active);
       });
     }
 
-    function findSection(id){
-      const sec = SCHEMA.find(s=>s.id===id);
-      return sec ? sec.summarize(state.answers) : '';
-    }
+    // ====== Events ======
+    // Mode buttons
+    $$('#step-mode [data-mode]').forEach(btn=>{
+      btn.addEventListener('click', ()=>{
+        const mode = btn.getAttribute('data-mode');
+        if(state.mode!==mode){
+          state.mode = mode;
+          byId('modeLabel').textContent = mode==='fast' ? 'Fast ER Note' : 'Detailed Note';
+          resetAnswers();
+          if(state.age!=null){
+            // Reveal and rebuild if age already confirmed
+            root.classList.remove('hidden');
+            byId('finalActions').classList.remove('hidden');
+            buildSections();
+          }
+          renderNote();
+        }
+      });
+    });
 
-    // ---- Age gate ----
+    // Age confirmation
     byId('confirmAge').addEventListener('click', ()=>{
       const val = Number(byId('age').value);
       const ok = Number.isFinite(val) && val>=0 && val<=120;
       byId('ageWarn').classList.toggle('hidden', ok);
       if(!ok) return;
       state.age = val;
-      byId('dynamicSections').classList.remove('hidden');
+      root.classList.remove('hidden');
       byId('finalActions').classList.remove('hidden');
-      if(!byId(SCHEMA[0].id)){ buildSections(); }
+      buildSections();
       renderNote();
-      byId(SCHEMA[0].id).scrollIntoView({behavior:'smooth',block:'start'});
+      root.scrollIntoView({behavior:'smooth',block:'start'});
     });
 
-    // Keyboard: Enter on age
-    byId('age').addEventListener('keydown',(e)=>{ if(e.key==='Enter') byId('confirmAge').click(); });
+    // Keyboard: Enter on age field
+    byId('age').addEventListener('keydown', (e)=>{ if(e.key==='Enter') byId('confirmAge').click(); });
 
-    // ---- Actions ----
+    // Actions
     byId('copyNote').addEventListener('click', async ()=>{
       try{ await navigator.clipboard.writeText(byId('noteBox').textContent); flash('Copied ✅'); }
       catch{ flash('Clipboard blocked – select & copy manually.', true); }
     });
     byId('downloadTxt').addEventListener('click', ()=>{
       const blob = new Blob([byId('noteBox').textContent], {type:'text/plain;charset=utf-8'});
-      const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='ed-note.txt'; a.click();
+      const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='er-note.txt'; a.click();
       URL.revokeObjectURL(a.href);
     });
     byId('printNote').addEventListener('click', ()=>window.print());
 
     function flash(msg,isErr=false){
       const b=document.createElement('div');
-      Object.assign(b.style,{position:'fixed',right:'20px',bottom:'20px',padding:'10px 12px',border:'1px solid var(--border)',
-        borderRadius:'12px',background:isErr?'#7f1d1d':'#064e3b',color:'#fff',boxShadow:'0 10px 30px rgba(0,0,0,.35)'});
+      Object.assign(b.style,{position:'fixed',right:'20px',bottom:'20px',padding:'10px 12px',border:'1px solid var(--border)',borderRadius:'12px',background:isErr?'#7f1d1d':'#064e3b',color:'#fff',boxShadow:'0 10px 30px rgba(0,0,0,.35)'});
       b.textContent=msg; document.body.appendChild(b); setTimeout(()=>b.remove(),2000);
     }
 
-    // init
-    buildStepper();
-    renderNote();
+    function capitalize(s){ return s ? s.charAt(0).toUpperCase()+s.slice(1) : s; }
 
-    function capitalizeFirst(s){ return s ? s.charAt(0).toUpperCase()+s.slice(1) : s; }
+    // Init
+    buildStepper();
   </script>
 </body>
 </html>
