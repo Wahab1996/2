@@ -1,63 +1,753 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<title>Critical Cases – Coming Soon</title>
-<style>
-body {
-  background-color: #f4f4f4;
-  font-family: Arial, sans-serif;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  text-align: center;
-}
-.container {
-  background: white;
-  padding: 40px;
-  border-radius: 10px;
-  box-shadow: 0 0 10px rgba(0,0,0,0.15);
-  max-width: 600px;
-}
-h1 {
-  font-size: 32px;
-  color: #333;
-}
-p {
-  font-size: 18px;
-  color: #666;
-  margin-top: 10px;
-}
-</style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>نموذج التاريخ المرضي – Professional History Taking</title>
+  <style>
+    :root{
+      --bg:#0f172a;          /* slate-900 */
+      --panel:#0b1224;       /* deeper */
+      --card:#111b33;        /* slate-900-ish */
+      --muted:#94a3b8;       /* slate-400 */
+      --text:#e5e7eb;        /* gray-200 */
+      --brand:#22c55e;       /* green-500 */
+      --brand-2:#06b6d4;     /* cyan-500 */
+      --danger:#ef4444;
+      --ok:#10b981;
+      --border:#1f2a44;
+      --chip:#1e293b;
+      --chip-hover:#0f172a;
+      --shadow: 0 8px 30px rgba(0,0,0,.25);
+      --radius:14px;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0; font-family:"Tajawal", system-ui, -apple-system, Segoe UI, Roboto, "Noto Kufi Arabic", sans-serif;
+      background: radial-gradient(1200px 700px at 85% -10%, #0a6 0%, transparent 55%) fixed,
+                  radial-gradient(900px 600px at -10% 110%, #09c 0%, transparent 50%) fixed,
+                  var(--bg);
+      color:var(--text);
+    }
+    header{
+      padding:20px; display:flex; align-items:center; gap:14px; justify-content:space-between;
+    }
+    .brand{display:flex; align-items:center; gap:12px}
+    .logo{
+      width:42px; height:42px; border-radius:12px; background:
+        conic-gradient(from 210deg at 70% 30%, #22c55e, #06b6d4);
+      box-shadow: inset 0 0 0 2px rgba(255,255,255,.08), var(--shadow);
+    }
+    h1{font-size:1.2rem; margin:0}
+    .wrap{
+      display:grid; grid-template-columns: 1.5fr 1fr; gap:18px; padding:0 20px 24px;
+    }
+    @media (max-width:1100px){ .wrap{grid-template-columns:1fr} }
+    .panel{
+      background:linear-gradient(180deg, rgba(255,255,255,.03), transparent 30%) , var(--panel);
+      border:1px solid var(--border); border-radius:var(--radius); padding:16px; box-shadow:var(--shadow);
+    }
+    .note-panel{position:sticky; top:16px; align-self:start}
+    .section{margin:14px 0; padding:14px; border:1px dashed var(--border); border-radius:12px; background: rgba(255,255,255,.02)}
+    .section h3{margin:0 0 10px; font-size:1.05rem}
+    .row{display:grid; grid-template-columns: repeat(auto-fit, minmax(220px,1fr)); gap:10px}
+    .chip{
+      display:inline-flex; align-items:center; gap:8px; padding:10px 12px; border-radius:12px;
+      background:var(--chip); border:1px solid var(--border); cursor:pointer; transition:.2s;
+    }
+    .chip:hover{background:var(--chip-hover)}
+    .chip input{accent-color:var(--brand); transform:scale(1.2)}
+    .muted{color:var(--muted); font-size:.9rem}
+    .divider{height:1px; background:linear-gradient(90deg, transparent, #1f2a44, transparent); margin:14px 0}
+    .actions{display:flex; gap:10px; flex-wrap:wrap}
+    button, .btn{
+      background:linear-gradient(180deg, rgba(255,255,255,.07), transparent), var(--card);
+      color:var(--text); border:1px solid var(--border); padding:12px 14px; border-radius:12px; cursor:pointer;
+      transition:.2s; font-weight:600;
+    }
+    button.primary{ background:linear-gradient(180deg, rgba(255,255,255,.12), transparent), #14532d; border-color:#1d4ed8; }
+    button:hover, .btn:hover{transform:translateY(-1px); box-shadow:0 6px 20px rgba(0,0,0,.25)}
+    .grid-two{display:grid; grid-template-columns:1fr 1fr; gap:12px}
+    @media (max-width:720px){ .grid-two{grid-template-columns:1fr} }
+    .age-card{
+      display:flex; gap:12px; align-items:center; background:var(--card); padding:14px; border-radius:12px;
+      border:1px solid var(--border);
+    }
+    input[type="number"], select{
+      width:100%; padding:12px; border-radius:10px; border:1px solid var(--border); background:#0b1326; color:var(--text);
+      outline:none; transition:.2s;
+    }
+    select{cursor:pointer}
+    input[type="text"]{
+      width:100%; padding:10px 12px; border-radius:10px; border:1px solid var(--border); background:#0b1326; color:var(--text);
+    }
+    .hidden{display:none !important}
+    .note{
+      white-space:pre-wrap; background:linear-gradient(180deg, rgba(255,255,255,.03), transparent), var(--card);
+      border:1px solid var(--border); border-radius:12px; padding:14px; min-height:320px; font-family:ui-monospace, "Cascadia Code", "Fira Code", monospace;
+    }
+    .kicker{color:#a7f3d0; font-weight:700}
+    .stepper{display:flex; gap:8px; flex-wrap:wrap; margin:6px 0 12px}
+    .step{
+      padding:8px 10px; border-radius:999px; border:1px solid var(--border); background:#0b1224; color:var(--muted);
+      font-weight:600; font-size:.9rem
+    }
+    .step.active{color:#10b981; border-color:#10b981}
+    .tag{display:inline-block; padding:2px 8px; border-radius:999px; font-size:.8rem; border:1px solid var(--border); background:#0e1a32; color:#93c5fd}
+    .footer{padding:16px 20px; color:var(--muted); font-size:.9rem}
+    .warn{color:#fca5a5}
+  </style>
 </head>
+<body>
+  <header>
+    <div class="brand">
+      <div class="logo" aria-hidden="true"></div>
+      <div>
+        <h1>نموذج التاريخ المرضي – <span class="kicker">Professional</span></h1>
+        <div class="muted">كل الإدخالات بالخيارات – النوتة تتحدث تلقائيًا 👌</div>
+      </div>
+    </div>
+    <div><span class="tag">HTML+CSS+JS</span></div>
+  </header>
 
-<body style="font-family: 'Segoe UI', sans-serif; background-color: #f8fbff; color: #222;">
-<style>
-.card {
-    background-color: rgba(255, 255, 255, 0.85);
-    border: 1px solid #0077b6;
-    padding: 15px;
-    margin: 10px;
-    border-radius: 10px;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-}
-header {
-    background-color: #0077b6;
-    color: white;
-    padding: 1em;
-    text-align: center;
-    font-size: 1.4em;
-}
-</style>
+  <div class="wrap">
+    <!-- LEFT: FORM -->
+    <main class="panel">
+      <div class="stepper" id="stepper"></div>
 
-<div class="container">
-  <h1>🚧 Coming Soon – Stay Tuned!</h1>
-  <p>This section is under development.</p>
-  <p>Powerful and practical emergency resources are on the way to support your clinical decisions.</p>
-  <p><strong>ترقبوا بإذن الله ⏳🚀</strong></p>
-</div>
+      <!-- STEP 1: AGE GATE -->
+      <section class="section" id="step-age">
+        <h3>١) أدخل العمر أولًا</h3>
+        <div class="age-card">
+          <label for="age"><strong>العمر (بالسنوات):</strong></label>
+          <input id="age" type="number" min="0" max="120" placeholder="مثال: 35" />
+          <button id="confirmAge" class="primary">تأكيد العمر</button>
+        </div>
+        <div id="ageWarn" class="muted warn hidden">الرجاء إدخال عمر من 0 إلى 120.</div>
+      </section>
 
-</body></body>
+      <!-- STEP 2+: DYNAMIC SECTIONS -->
+      <div id="dynamicSections" class="hidden"></div>
 
+      <div class="divider"></div>
+      <div class="actions hidden" id="finalActions">
+        <button id="copyNote">نسخ النوتة</button>
+        <button id="downloadTxt">تحميل كملف TXT</button>
+        <button id="printNote">طباعة</button>
+        <div class="muted">يتم تحديث النوتة تلقائيًا عند تغيير أي خيار.</div>
+      </div>
+    </main>
+
+    <!-- RIGHT: NOTE -->
+    <aside class="panel note-panel">
+      <h3>النوتة السريرية (Auto‑Generated)</h3>
+      <div class="note" id="noteBox">أدخل العمر لبدء التوليد…</div>
+    </aside>
+  </div>
+
+  <div class="footer">
+    صنع ليلائم مشاريعك مباشرة. لا يجمع بيانات ولا يحتاج إنترنت. 🔨🤖🔧
+  </div>
+
+  <script>
+    // ============ State ============
+    const state = {
+      age: null,
+      answers: {},
+    };
+
+    // ============ Utilities ============
+    const $ = (sel, el=document) => el.querySelector(sel);
+    const $$ = (sel, el=document) => [...el.querySelectorAll(sel)];
+    const byId = id => document.getElementById(id);
+
+    function kebab(str){ return str.toLowerCase().replace(/\s+/g,'-'); }
+
+    function ensureArray(x){ return Array.isArray(x) ? x : (x ? [x] : []); }
+
+    // Toggle "None" behavior inside checkbox groups
+    function handleNoneBehavior(container){
+      container.addEventListener('change', (e)=>{
+        const t = e.target;
+        if(t.type !== 'checkbox') return;
+        const group = t.closest('[data-group]');
+        if(!group) return;
+        const none = group.querySelector('input[data-none]');
+        const others = [...group.querySelectorAll('input[type="checkbox"]:not([data-none])')];
+        if(t.hasAttribute('data-none') && t.checked){
+          // Uncheck others
+          others.forEach(c=>c.checked=false);
+        } else if(!t.hasAttribute('data-none') && t.checked){
+          if(none) none.checked=false;
+        }
+        renderNote();
+      });
+    }
+
+    // ============ Schema ============
+    // Every section declares its own summarize(answers) -> string
+    const SCHEMA = [
+      {
+        id: "demographics",
+        title: "٢) الديموغرافيا الأساسية",
+        questions: [
+          {
+            key:"gender",
+            label:"الجنس",
+            type:"radio",
+            options:[
+              {value:"ذكر", label:"ذكر"},
+              {value:"أنثى", label:"أنثى"},
+              {value:"غير محدد", label:"غير محدد"}
+            ],
+            default:"غير محدد"
+          },
+          {
+            key:"chief",
+            label:"الشكوى الرئيسية",
+            type:"select",
+            options:[
+              "ألم صدري","ضيق تنفس","حمّى","سعال","ألم بطني","صداع",
+              "دوخة","خفقان","قيء/غثيان","إسهال","ألم مفاصل","متابعة روتينية","أخرى"
+            ],
+            withOther:true
+          },
+          {
+            key:"onset",
+            label:"بداية الأعراض",
+            type:"radio",
+            options:["حاد","تحت حاد","مزمن","غير محدد"],
+            default:"غير محدد"
+          },
+          {
+            key:"severity",
+            label:"شدة الأعراض",
+            type:"radio",
+            options:["خفيفة","متوسطة","شديدة"],
+            default:"متوسطة"
+          }
+        ],
+        summarize(ans){
+          const g = ans.gender || "غير محدد";
+          const c = ans.chief === "أخرى" ? (ans.chief_other || "غير محدد") : (ans.chief || "غير محدد");
+          const onset = ans.onset || "غير محدد";
+          const sev = ans.severity || "غير محدد";
+          return `الديموغرافيا/الشكوى:
+- الجنس: ${g}
+- الشكوى الرئيسية: ${c}
+- البداية: ${onset} | الشدة: ${sev}`;
+        }
+      },
+      {
+        id:"pmh",
+        title:"٣) الأمراض المزمنة (PMH)",
+        questions:[
+          {
+            key:"pmh",
+            label:"اختر جميع الحالات المعروفة",
+            type:"checkbox",
+            options:[
+              "لا يوجد",
+              "سكري","ضغط دم","ربو","قصور/فرط الغدة الدرقية","أمراض قلبية","أمراض كلوية مزمنة",
+              "صرع","ارتفاع دهون","قرحة/ارتجاع معدي","أمراض نفسية","أخرى"
+            ],
+            withOther:true,
+            hasNone:true
+          }
+        ],
+        summarize(ans){
+          const list = ensureArray(ans.pmh);
+          if(list.includes("لا يوجد")) return "PMH: لا توجد أمراض مزمنة معروفة.";
+          const other = ans.pmh_other ? `، أخرى: ${ans.pmh_other}` : "";
+          return `PMH: ${list.join("، ")}${other}.`;
+        }
+      },
+      {
+        id:"meds",
+        title:"٤) الأدوية الحالية",
+        questions:[
+          {
+            key:"meds",
+            label:"اختر الفئات الدوائية المستخدمة",
+            type:"checkbox",
+            options:[
+              "لا يوجد",
+              "أدوية ضغط","أدوية سكر (فموية)","أنسولين","مضادات تخثر",
+              "موسعات/بخاخات ربو","مسكنات منتظمة","مضادات اكتئاب/قلق","مكملات","أخرى"
+            ],
+            withOther:true,
+            hasNone:true
+          },
+          {
+            key:"adherence",
+            label:"الالتزام الدوائي",
+            type:"radio",
+            options:["جيد","متوسط","ضعيف","غير مُقيّم"],
+            default:"غير مُقيّم"
+          }
+        ],
+        summarize(ans){
+          const meds = ensureArray(ans.meds);
+          const m = meds.includes("لا يوجد") ? "لا يتناول أدوية ثابتة" : meds.join("، ");
+          const other = (ans.meds_other && !meds.includes("لا يوجد")) ? `، أخرى: ${ans.meds_other}` : "";
+          return `Medications: ${m}${other}. الالتزام: ${ans.adherence||"غير مُقيّم"}.`;
+        }
+      },
+      {
+        id:"allergies",
+        title:"٥) الحساسية",
+        questions:[
+          {
+            key:"allergy",
+            label:"اختر ما ينطبق",
+            type:"checkbox",
+            options:["لا يوجد","بنسلين","مضادات التهاب (NSAIDs)","أغذية","لاتِكس","أخرى"],
+            withOther:true,
+            hasNone:true
+          },
+          {
+            key:"allergyRxn",
+            label:"نوع التفاعل (إن وجد)",
+            type:"radio",
+            options:["طفح/حكة","تورّم/وذمة وعائية","حساسية مفرطة","غير محدد","لا ينطبق"],
+            default:"لا ينطبق"
+          }
+        ],
+        summarize(ans){
+          const list = ensureArray(ans.allergy);
+          if(list.includes("لا يوجد")) return "Allergies: لا توجد حساسية معروفة (NKDA/No known).";
+          const other = ans.allergy_other ? `، أخرى: ${ans.allergy_other}` : "";
+          return `Allergies: ${list.join("، ")}${other}. نوع التفاعل: ${ans.allergyRxn||"غير محدد"}.`;
+        }
+      },
+      {
+        id:"psh",
+        title:"٦) العمليات الجراحية (PSH)",
+        questions:[
+          {
+            key:"psh",
+            label:"اختر ما ينطبق",
+            type:"checkbox",
+            options:["لا يوجد","استئصال زائدة","استئصال مرارة","قيصرية","فتاق","جراحة قلبية","أخرى"],
+            withOther:true,
+            hasNone:true
+          }
+        ],
+        summarize(ans){
+          const list = ensureArray(ans.psh);
+          if(list.includes("لا يوجد")) return "PSH: لا توجد عمليات سابقة.";
+          const other = ans.psh_other ? `، أخرى: ${ans.psh_other}` : "";
+          return `PSH: ${list.join("، ")}${other}.`;
+        }
+      },
+      {
+        id:"family",
+        title:"٧) التاريخ العائلي",
+        questions:[
+          {
+            key:"fhx",
+            label:"أمراض عائلية",
+            type:"checkbox",
+            options:["لا يوجد","سكري","ضغط دم","أمراض قلبية مبكرة","سرطانات","أمراض وراثية","أخرى"],
+            withOther:true,
+            hasNone:true
+          }
+        ],
+        summarize(ans){
+          const list = ensureArray(ans.fhx);
+          if(list.includes("لا يوجد")) return "FHx: لا يوجد تاريخ عائلي مهم.";
+          const other = ans.fhx_other ? `، أخرى: ${ans.fhx_other}` : "";
+          return `FHx: ${list.join("، ")}${other}.`;
+        }
+      },
+      {
+        id:"social",
+        title:"٨) العادات ونمط الحياة (Social)",
+        questions:[
+          {
+            key:"smoke",
+            label:"التدخين",
+            type:"radio",
+            options:["غير مدخن","مدخن حالي","متوقف"],
+            default:"غير مدخن"
+          },
+          {
+            key:"occupation",
+            label:"العمل/الدراسة",
+            type:"select",
+            options:["طالب","موظف مكتب","عمل بدني","قطاع صحي","لا يعمل","أخرى"],
+            withOther:true
+          },
+          {
+            key:"activity",
+            label:"النشاط البدني",
+            type:"radio",
+            options:["خامل","متوسط","نشِط"],
+            default:"متوسط"
+          },
+          {
+            key:"caffeine",
+            label:"الكافيين",
+            type:"radio",
+            options:["قليل","متوسط","كثير","لا يتناول"],
+            default:"متوسط"
+          }
+        ],
+        summarize(ans){
+          const occ = ans.occupation === "أخرى" ? (ans.occupation_other || "غير محدد") : (ans.occupation || "غير محدد");
+          return `Social: تدخين: ${ans.smoke||"غير محدد"} | نشاط: ${ans.activity||"غير محدد"} | كافيين: ${ans.caffeine||"غير محدد"} | عمل/دراسة: ${occ}.`;
+        }
+      },
+      {
+        id:"imms",
+        title:"٩) التطعيمات",
+        questions:[
+          {
+            key:"vacc",
+            label:"حالة التطعيم",
+            type:"radio",
+            options:["مكتملة حسب العمر","غير مكتملة","غير معروف"],
+            default:"غير معروف"
+          },
+          {
+            key:"extraVacc",
+            label:"تطعيمات إضافية مأخوذة",
+            type:"checkbox",
+            options:["انفلونزا موسمية","كوفيد-19 (آخر سنة)","الكزاز","التهاب كبد B","لا يوجد"],
+            hasNone:true
+          }
+        ],
+        summarize(ans){
+          const base = ans.vacc || "غير معروف";
+          const extra = ensureArray(ans.extraVacc);
+          const ext = extra.length ? (extra.includes("لا يوجد") ? "" : `؛ إضافية: ${extra.join("، ")}`) : "";
+          return `Immunization: ${base}${ext}.`;
+        }
+      },
+      {
+        id:"gyn",
+        title:"١٠) تاريخ نسائي/توليدي (يظهر للإناث)",
+        visibleIf:(answers)=> answers.gender === "أنثى" && Number(state.age) >= 12 && Number(state.age) <= 55,
+        questions:[
+          {
+            key:"preg",
+            label:"حمل حاليًا؟",
+            type:"radio",
+            options:["لا","نعم","غير معروف"],
+            default:"غير معروف"
+          },
+          {
+            key:"lmp",
+            label:"آخر دورة شهرية",
+            type:"radio",
+            options:["أقل من 4 أسابيع","4–8 أسابيع","أكثر من شهرين","غير معروف","لا ينطبق"],
+            default:"لا ينطبق"
+          }
+        ],
+        summarize(ans){
+          if(!(state.answers.gender === "أنثى" && state.age >= 12 && state.age <=55)) return "";
+          return `Gyn/Obs: حمل: ${ans.preg||"غير معروف"} | LMP: ${ans.lmp||"غير معروف"}.`;
+        }
+      },
+      {
+        id:"ros",
+        title:"١١) مراجعة الأجهزة (ROS)",
+        questions:[
+          {
+            key:"ros_general",
+            label:"عام",
+            type:"checkbox",
+            options:["لا شكاوى","حمّى","تعرّق ليلي","نقص وزن","إرهاق"],
+            hasNone:true
+          },
+          {
+            key:"ros_cardio",
+            label:"قلبي وعائي",
+            type:"checkbox",
+            options:["لا شكاوى","ألم صدري","خفقان","تورم أطراف","إغماء"],
+            hasNone:true
+          },
+          {
+            key:"ros_resp",
+            label:"تنفسي",
+            type:"checkbox",
+            options:["لا شكاوى","سعال","ضيق تنفس","صفير","بلغم"],
+            hasNone:true
+          },
+          {
+            key:"ros_gi",
+            label:"هضمي",
+            type:"checkbox",
+            options:["لا شكاوى","ألم بطني","غثيان/قيء","إسهال","إمساك","حرقة/ارتجاع"],
+            hasNone:true
+          },
+          {
+            key:"ros_neuro",
+            label:"عصبي",
+            type:"checkbox",
+            options:["لا شكاوى","صداع","دوخة","ضعف/خدر","اختلاجات"],
+            hasNone:true
+          }
+        ],
+        summarize(ans){
+          function line(key, name){
+            const v = ensureArray(ans[key]);
+            return v.includes("لا شكاوى") ? `${name}: لا شكاوى.` : `${name}: ${v.join("، ")}.`;
+          }
+          return `ROS:
+- ${line("ros_general","عام")}
+- ${line("ros_cardio","قلبي")}
+- ${line("ros_resp","تنفسي")}
+- ${line("ros_gi","هضمي")}
+- ${line("ros_neuro","عصبي")}`;
+        }
+      },
+    ];
+
+    // ============ Build UI ============
+    const dynamicRoot = byId('dynamicSections');
+    const stepper = byId('stepper');
+
+    function buildStepper(){
+      stepper.innerHTML = '';
+      const steps = [
+        {id:'step-age', label:'العمر'},
+        ...SCHEMA.map(s => ({id:s.id, label: s.title.replace(/^\d+\)\s*/,'').slice(0,18) + (s.title.length>18?'…':'')}))
+      ];
+      steps.forEach((st,i)=>{
+        const b = document.createElement('div');
+        b.className = 'step' + (i===0?' active':'');
+        b.dataset.target = st.id;
+        b.textContent = `${i+1}. ${st.label}`;
+        stepper.appendChild(b);
+      });
+    }
+
+    function buildSections(){
+      dynamicRoot.innerHTML = '';
+      SCHEMA.forEach(section=>{
+        const sec = document.createElement('section');
+        sec.className = 'section';
+        sec.id = section.id;
+        const h = document.createElement('h3');
+        h.textContent = section.title;
+        sec.appendChild(h);
+
+        section.questions.forEach(q=>{
+          const block = document.createElement('div');
+          block.className = 'row';
+          const label = document.createElement('div');
+          label.innerHTML = `<div class="muted" style="margin-bottom:8px">${q.label}</div>`;
+          block.appendChild(label);
+
+          const group = document.createElement('div');
+          group.className = 'row';
+          group.dataset.group = q.key;
+
+          if(q.type === 'radio' || q.type === 'checkbox'){
+            q.options.forEach(opt=>{
+              const id = `${section.id}-${q.key}-${kebab(String(opt))}`;
+              const wrap = document.createElement('label');
+              wrap.className = 'chip';
+              const input = document.createElement('input');
+              input.type = q.type;
+              input.name = q.key + (q.type==='checkbox' ? '[]' : '');
+              input.value = opt;
+              input.id = id;
+              if(q.hasNone && opt === "لا يوجد"){ input.setAttribute('data-none',''); }
+              input.addEventListener('change', ()=> {
+                if(q.type==='radio'){
+                  state.answers[q.key] = input.value;
+                } else {
+                  // checkboxes
+                  const all = [...group.querySelectorAll('input[type=checkbox]')].filter(c=>c.checked).map(c=>c.value);
+                  state.answers[q.key] = all;
+                }
+                renderNote();
+              });
+              wrap.appendChild(input);
+              const span = document.createElement('span');
+              span.textContent = opt;
+              wrap.appendChild(input);
+              wrap.appendChild(span);
+              group.appendChild(wrap);
+            });
+
+          } else if(q.type === 'select'){
+            const sel = document.createElement('select');
+            sel.id = `${section.id}-${q.key}`;
+            q.options.forEach(opt=>{
+              const o = document.createElement('option');
+              o.value = opt;
+              o.textContent = opt;
+              sel.appendChild(o);
+            });
+            sel.addEventListener('change', ()=>{
+              state.answers[q.key] = sel.value;
+              // toggle 'other' input
+              const otherWrap = byId(`${section.id}-${q.key}-other-wrap`);
+              if(otherWrap) otherWrap.classList.toggle('hidden', sel.value !== 'أخرى');
+              renderNote();
+            });
+            group.appendChild(sel);
+          }
+
+          block.appendChild(group);
+
+          // Optional "other" text for select/checkbox groups
+          if(q.withOther){
+            const otherWrap = document.createElement('div');
+            otherWrap.id = `${section.id}-${q.key}-other-wrap`;
+            otherWrap.className = 'grid-two ' + 'hidden';
+            otherWrap.innerHTML = `
+              <div class="muted">يرجى التحديد:</div>
+              <input type="text" id="${section.id}-${q.key}-other" placeholder="اكتب التوضيح المختصر…" />
+            `;
+            block.appendChild(otherWrap);
+            block.addEventListener('change', ()=>{
+              const needsOther =
+                (q.type==='select' && state.answers[q.key]==='أخرى') ||
+                (q.type!=='select' && ensureArray(state.answers[q.key]).includes('أخرى'));
+              otherWrap.classList.toggle('hidden', !needsOther);
+            });
+            // listen typing
+            block.addEventListener('input', (e)=>{
+              const inp = byId(`${section.id}-${q.key}-other`);
+              if(e.target===inp){
+                state.answers[`${q.key}_other`] = inp.value.trim();
+                renderNote();
+              }
+            });
+          }
+
+          sec.appendChild(block);
+        });
+
+        dynamicRoot.appendChild(sec);
+
+        // Initialize defaults
+        section.questions.forEach(q=>{
+          if(q.type==='radio' && q.default){
+            state.answers[q.key] = q.default;
+            // Check the default radio visually
+            const def = $(`input[type=radio][name="${q.key}"][value="${q.default}"]`, sec);
+            if(def) def.checked = true;
+          }
+        });
+
+        handleNoneBehavior(sec);
+      });
+
+      // Visibility rules (e.g., Gyn)
+      applyVisibilityRules();
+    }
+
+    function applyVisibilityRules(){
+      SCHEMA.forEach(section=>{
+        if(section.visibleIf){
+          const visible = !!section.visibleIf(state.answers);
+          const el = byId(section.id);
+          if(el) el.classList.toggle('hidden', !visible);
+        }
+      });
+    }
+
+    // ============ Note Rendering ============
+    function renderNote(){
+      applyVisibilityRules();
+
+      const parts = [];
+      // Header
+      parts.push(`التاريخ المرضي (تلقائي)
+العمر: ${state.age ?? "غير مدخل"} سنة
+${"—".repeat(30)}`);
+
+      // sections summaries
+      SCHEMA.forEach(section=>{
+        // if section is hidden by visibleIf => may skip summary (unless summarize returns empty)
+        if(section.visibleIf && !section.visibleIf(state.answers)) {
+          // do nothing
+        }
+        const s = section.summarize(state.answers) || "";
+        if(s.trim()) parts.push(s.trim());
+      });
+
+      const noteText = parts.join("\n");
+      byId('noteBox').textContent = noteText;
+
+      // Update stepper visual
+      const steps = $$('.step', stepper);
+      steps.forEach(st=>{
+        const target = st.dataset.target;
+        const done = (target === 'step-age') ? !!state.age : !!byId(target);
+        st.classList.toggle('active', done);
+      });
+    }
+
+    // ============ Age Gate ============
+    byId('confirmAge').addEventListener('click', ()=>{
+      const val = Number(byId('age').value);
+      const ok = Number.isFinite(val) && val>=0 && val<=120;
+      byId('ageWarn').classList.toggle('hidden', ok);
+      if(!ok){ byId('ageWarn').classList.remove('hidden'); return; }
+      state.age = val;
+      // Reveal dynamic sections & actions
+      byId('dynamicSections').classList.remove('hidden');
+      byId('finalActions').classList.remove('hidden');
+      // Build once if empty
+      if(!byId(SCHEMA[0].id)){ buildSections(); }
+      renderNote();
+      // Scroll to first section
+      byId(SCHEMA[0].id).scrollIntoView({behavior:'smooth', block:'start'});
+    });
+
+    // ============ Actions ============
+    byId('copyNote').addEventListener('click', async ()=>{
+      const text = byId('noteBox').textContent;
+      try{
+        await navigator.clipboard.writeText(text);
+        flash('تم النسخ ✅');
+      }catch(e){
+        flash('تعذّر النسخ تلقائيًا. حدّد النص وانسخه يدويًا.', true);
+      }
+    });
+
+    byId('downloadTxt').addEventListener('click', ()=>{
+      const blob = new Blob([byId('noteBox').textContent], {type:'text/plain;charset=utf-8'});
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'medical-history-note.txt';
+      a.click();
+      URL.revokeObjectURL(a.href);
+    });
+
+    byId('printNote').addEventListener('click', ()=> window.print());
+
+    function flash(msg, isErr=false){
+      const b = document.createElement('div');
+      b.textContent = msg;
+      b.style.position='fixed';
+      b.style.insetInlineEnd='20px';
+      b.style.bottom='20px';
+      b.style.padding='10px 12px';
+      b.style.border='1px solid var(--border)';
+      b.style.borderRadius='12px';
+      b.style.background=isErr?'#7f1d1d':'#064e3b';
+      b.style.color='#fff';
+      b.style.boxShadow= '0 10px 30px rgba(0,0,0,.35)';
+      document.body.appendChild(b);
+      setTimeout(()=>b.remove(),2000);
+    }
+
+    // Initial UI
+    buildStepper();
+    renderNote();
+
+    // Keyboard: Enter on age field
+    byId('age').addEventListener('keydown', (e)=>{
+      if(e.key==='Enter'){ byId('confirmAge').click(); }
+    });
+  </script>
+</body>
 </html>
